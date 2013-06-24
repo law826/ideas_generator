@@ -98,12 +98,7 @@ class DataBase:
 		self.g = igraph.Graph.Read_Pickle("graph.p")
 		
 	def update_rating_in_edgelist(self, rating):
-		try:
-			self.g[self.two_drawn[0], self.two_drawn[1]]	
-			self.g[self.two_drawn[0], self.two_drawn[1]] = rating
-		except ValueError:
-			self.g[self.two_drawn[0], self.two_drawn[1]] = rating
-		self.save_graph()
+		self.g[self.two_drawn[0], self.two_drawn[1]] = rating
 		
 		
 # 	#def append_to_adjacency_matrix_and_save_to_csv(self):
