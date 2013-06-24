@@ -59,29 +59,35 @@ class DataBase:
 
 		unconnected_total_probability = 0.5
 		#self.vertex_sequence_of_unconnected = self.g.vs.select(_degree_eq=0)
-		self.two_drawn = rand.sample(self.g.vs,2)
-		# Query edge characteristics for pass/fail.
-		# Identify the edge of the chosen vertices.
-		try:
-			self.count_of_selected_edge = self.g.es.select(_within = [self.two_drawn[0].index, self.two_drawn[1].index])[0]["count"]
-			self.weight_of_selected_edge = self.g.es.select(_within = [self.two_drawn[0].index, self.two_drawn[1].index])[0]["weight"]
-		except IndexError:
-			self.count_of_selected_edge = 0
-			self.weight_of_selected_edge = 0
+		
+		pass_fail_gate = 0
+		while pass_fail_gate=0:
+			self.two_drawn = rand.sample(self.g.vs, 2)
+			# Query edge characteristics for pass/fail.
+			# Identify the edge of the chosen vertices.
+			try:
+				self.count_of_selected_edge = self.g.es.select(_within = [self.two_drawn[0].index, self.two_drawn[1].index])[0]["count"]
+				self.weight_of_selected_edge = self.g.es.select(_within = [self.two_drawn[0].index, self.two_drawn[1].index])[0]["weight"]
+			except IndexError:
+				self.count_of_selected_edge = 0
+				self.weight_of_selected_edge = 0
+				
+			self.count_fail_probability = 0.90-(0.90/(self.count_of_selected_edge+1))
 			
-		self.count_fail_probability = 0.90-(0.90/(self.count_of_selected_edge+1))
-		if self.weight_of_selected_edge >= 0:
-			self.weight_fail_probability = self.weight_of_selected_edge+0.90
-		else:
-			self.weight_fail_probability = 0.90
+			if self.weight_of_selected_edge >= 0:
+				self.weight_fail_probability = self.weight_of_selected_edge+0.90
+			else:
+				self.weight_fail_probability = 5-self.weight_of_selected_edge
+			
+			total_fail_probability = (self.count_fail_probability + self.weight_fail_probability)/2
+			
+			draw_number = rand.random()
+			if draw_number >= total_fail_probability:
+				pass_fail_gate = 1
+			else:
+				pass
 		
-		
-		
-		
-		
-		
-		pdb.set_trace()
-		return self.two_drawn[0], self.two_drawn[1]
+			return self.two_drawn[0], self.two_drawn[1]
 		
 
 	def save_graph(self):
@@ -93,7 +99,7 @@ class DataBase:
 		
 	def update_rating_in_edgelist(self, rating):
 		try:
-			self.g[self.two_drawn[0], self.two_drawn[1]]
+			self.g[self.two_drawn[0], self.two_drawn[1]]			
 			self.g[self.two_drawn[0], self.two_drawn[1]] = self.g[self.two_drawn[0], self.two_drawn[1]] + rating
 		except ValueError:
 			self.g[self.two_drawn[0], self.two_drawn[1]] = rating
