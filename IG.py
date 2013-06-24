@@ -58,8 +58,28 @@ class DataBase:
 # 		np.random.multinomial(2, *degree_fraction)
 
 		unconnected_total_probability = 0.5
-		self.vertex_sequence_of_unconnected = self.g.vs.select(_degree_eq=0)
-		self.two_drawn = rand.sample(self.vertex_sequence_of_unconnected["name"],2)
+		#self.vertex_sequence_of_unconnected = self.g.vs.select(_degree_eq=0)
+		self.two_drawn = rand.sample(self.g.vs,2)
+		# Query edge characteristics for pass/fail.
+		# Identify the edge of the chosen vertices.
+		try:
+			self.count_of_selected_edge = self.g.es.select(_within = [self.two_drawn[0].index, self.two_drawn[1].index])[0]["count"]
+			self.weight_of_selected_edge = self.g.es.select(_within = [self.two_drawn[0].index, self.two_drawn[1].index])[0]["weight"]
+		except IndexError:
+			self.count_of_selected_edge = 0
+			self.weight_of_selected_edge = 0
+			
+		self.count_fail_probability = 0.90-(0.90/(self.count_of_selected_edge+1))
+		if self.weight_of_selected_edge >= 0:
+			self.weight_fail_probability = self.weight_of_selected_edge+0.90
+		else:
+			self.weight_fail_probability = 0.90
+		
+		
+		
+		
+		
+		
 		pdb.set_trace()
 		return self.two_drawn[0], self.two_drawn[1]
 		
