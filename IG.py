@@ -61,7 +61,7 @@ class DataBase:
 		#self.vertex_sequence_of_unconnected = self.g.vs.select(_degree_eq=0)
 		
 		pass_fail_gate = 0
-		while pass_fail_gate=0:
+		while pass_fail_gate==0:
 			self.two_drawn = rand.sample(self.g.vs, 2)
 			# Query edge characteristics for pass/fail.
 			# Identify the edge of the chosen vertices.
@@ -83,11 +83,17 @@ class DataBase:
 			
 			draw_number = rand.random()
 			if draw_number >= total_fail_probability:
+				try: 
+					self.g.es.select(_within = [self.two_drawn[0].index, self.two_drawn[1].index])[0]["count"]
+					self.g.es.select(_within = [self.two_drawn[0].index, self.two_drawn[1].index])[0]["count"] = self.g.es.select(_within = [self.two_drawn[0].index, self.two_drawn[1].index])[0]["count"] + 1
+				except KeyError:
+					self.g.es.select(_within = [self.two_drawn[0].index, self.two_drawn[1].index])[0]["count"] = 1
+					
 				pass_fail_gate = 1
 			else:
 				pass
 		
-			return self.two_drawn[0], self.two_drawn[1]
+			return self.two_drawn[0]["name"], self.two_drawn[1]["name"]
 		
 
 	def save_graph(self):
