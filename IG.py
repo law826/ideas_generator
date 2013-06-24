@@ -68,7 +68,7 @@ class DataBase:
 			try:
 				self.count_of_selected_edge = self.g.es.select(_within = [self.two_drawn[0].index, self.two_drawn[1].index])[0]["count"]
 				self.weight_of_selected_edge = self.g.es.select(_within = [self.two_drawn[0].index, self.two_drawn[1].index])[0]["weight"]
-			except IndexError:
+			except (IndexError, KeyError):
 				self.count_of_selected_edge = 0
 				self.weight_of_selected_edge = 3
 				
@@ -88,7 +88,6 @@ class DataBase:
 					self.g.es.select(_within = [self.two_drawn[0].index, self.two_drawn[1].index])[0]["count"] = self.g.es.select(_within = [self.two_drawn[0].index, self.two_drawn[1].index])[0]["count"] + 1
 				except KeyError:
 					self.g.es.select(_within = [self.two_drawn[0].index, self.two_drawn[1].index])[0]["count"] = 1
-					
 				pass_fail_gate = 1
 			else:
 				pass
