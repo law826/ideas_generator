@@ -70,14 +70,14 @@ class DataBase:
 				self.weight_of_selected_edge = self.g.es.select(_within = [self.two_drawn[0].index, self.two_drawn[1].index])[0]["weight"]
 			except IndexError:
 				self.count_of_selected_edge = 0
-				self.weight_of_selected_edge = 0
+				self.weight_of_selected_edge = 3
 				
 			self.count_fail_probability = 0.90-(0.90/(self.count_of_selected_edge+1))
 			
 			if self.weight_of_selected_edge >= 0:
 				self.weight_fail_probability = self.weight_of_selected_edge+0.90
 			else:
-				self.weight_fail_probability = 5-self.weight_of_selected_edge
+				self.weight_fail_probability = -(0.18*self.weight_of_selected_edge) + 0.90
 			
 			total_fail_probability = (self.count_fail_probability + self.weight_fail_probability)/2
 			
@@ -99,7 +99,7 @@ class DataBase:
 		
 	def update_rating_in_edgelist(self, rating):
 		try:
-			self.g[self.two_drawn[0], self.two_drawn[1]]			
+			self.g[self.two_drawn[0], self.two_drawn[1]]		
 			self.g[self.two_drawn[0], self.two_drawn[1]] = self.g[self.two_drawn[0], self.two_drawn[1]] + rating
 		except ValueError:
 			self.g[self.two_drawn[0], self.two_drawn[1]] = rating
@@ -254,11 +254,11 @@ class RatingWindow:
 		self.entryLabel.pack()
 		
 		# Buttons
-		button1 = Button(self.root, text="-2", default="active", command = lambda: self.RatingButtonPressed(-2), takefocus=1).pack()
-		button2 = Button(self.root, text="-1", default="active", command = lambda: self.RatingButtonPressed(-1), takefocus=1).pack()
-		button3 = Button(self.root, text="0", default="active", command = lambda: self.RatingButtonPressed(0), takefocus=1).pack()
-		button4 = Button(self.root, text="1", default="active", command = lambda: self.RatingButtonPressed(1), takefocus=1).pack()
-		button5 = Button(self.root, text="2", default="active", command = lambda: self.RatingButtonPressed(2), takefocus=1).pack()
+		button1 = Button(self.root, text="1", default="active", command = lambda: self.RatingButtonPressed(1), takefocus=1).pack()
+		button2 = Button(self.root, text="2", default="active", command = lambda: self.RatingButtonPressed(2), takefocus=1).pack()
+		button3 = Button(self.root, text="3", default="active", command = lambda: self.RatingButtonPressed(3), takefocus=1).pack()
+		button4 = Button(self.root, text="4", default="active", command = lambda: self.RatingButtonPressed(4), takefocus=1).pack()
+		button5 = Button(self.root, text="5", default="active", command = lambda: self.RatingButtonPressed(5), takefocus=1).pack()
 		
 		self.root.lift()
 		self.root.mainloop()	
