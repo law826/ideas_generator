@@ -63,11 +63,12 @@ class DataBase:
 		pass_fail_gate = 0
 		while pass_fail_gate==0:
 			self.two_drawn = rand.sample(self.g.vs, 2)
+			print pass_fail_gate
 			# Query edge characteristics for pass/fail.
 			# Identify the edge of the chosen vertices.
 			try:
 				self.count_of_selected_edge = self.g.es.select(_within = [self.two_drawn[0].index, self.two_drawn[1].index])[0]["count"]
-				self.weight_of_selected_edge = self.g.es.select(_within = [self.two_drawn[0].index, self.two_drawn[1].index])[0]["weight"]
+				self.weight_of_selected_edge = self.g.es.select(_within = [self.two_drawn[0].index, self.two_drawn[1].index])[0]["weight"]		
 			except (IndexError, KeyError):
 				self.count_of_selected_edge = 0
 				self.weight_of_selected_edge = 3
@@ -75,10 +76,10 @@ class DataBase:
 			self.count_fail_probability = 0.90-(0.90/(self.count_of_selected_edge+1))
 			
 			if self.weight_of_selected_edge >= 0:
-				self.weight_fail_probability = self.weight_of_selected_edge+0.90
-			else:
 				self.weight_fail_probability = -(0.18*self.weight_of_selected_edge) + 0.90
-			
+			else:
+				self.weight_fail_probability = 0.90
+							
 			total_fail_probability = (self.count_fail_probability + self.weight_fail_probability)/2
 			
 			draw_number = rand.random()
@@ -86,13 +87,13 @@ class DataBase:
 				try: 
 					self.g.es.select(_within = [self.two_drawn[0].index, self.two_drawn[1].index])[0]["count"]
 					self.g.es.select(_within = [self.two_drawn[0].index, self.two_drawn[1].index])[0]["count"] = self.g.es.select(_within = [self.two_drawn[0].index, self.two_drawn[1].index])[0]["count"] + 1
-				except KeyError:
+				except (IndexError, KeyError):
 					self.g.es.select(_within = [self.two_drawn[0].index, self.two_drawn[1].index])[0]["count"] = 1
 				pass_fail_gate = 1
 			else:
 				pass
 		
-			return self.two_drawn[0]["name"], self.two_drawn[1]["name"]
+		return self.two_drawn[0]["name"], self.two_drawn[1]["name"]
 		
 
 	def save_graph(self):
