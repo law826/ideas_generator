@@ -16,7 +16,6 @@ import random as rand
 
 def main():
 	
-	apple=1
 	mainwindow = IG.MainWindow()
 
 if __name__ == '__main__':

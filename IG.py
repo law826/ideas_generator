@@ -23,7 +23,8 @@ import tkMessageBox
 import cPickle
 import numpy as np
 import igraph
-import pdb
+from pdb import *
+
 
 # This will contain all the items and methods relevant to the items. 
 class DataBase:
@@ -103,7 +104,7 @@ class DataBase:
 		try: 
 			self.g.es.select(_within = [self.two_drawn[0].index, self.two_drawn[1].index])[0]["count"] # start here
 			self.g.es.select(_within = [self.two_drawn[0].index, self.two_drawn[1].index])[0]["count"] = self.g.es.select(_within = [self.two_drawn[0].index, self.two_drawn[1].index])[0]["count"] + 1
-		except (IndexError, KeyError):
+		except (IndexError, KeyError, TypeError):
 			self.g.es.select(_within = [self.two_drawn[0].index, self.two_drawn[1].index])[0]["count"] = 1
 		
 		
@@ -217,25 +218,27 @@ class MainWindow:
 			self.entryWidget.delete(0, END)	
 			
 	def GeneratePairButtonPressed(self):
-		RatingWindow(self.DB)
+		RatingWindow(self)
 					
 	def ManageDatabase(self):
-		for member_count, member in enumerate(self.DB.draw_list):
+		for member_count, member in enumerate(self.DB.g.vs["name"]):
 			listbox = Listbox(master)
 			listbox.pack()
 			print member_count
 			if member_count==0:
-				self.database_string = member.item_name
+				self.database_string = self.DB.g.vs["name"]
 			else:
-				self.database_string = self.database_string+"\r"+member.item_name
+				self.database_string = self.database_string+"\r"+self.DB.g.vs["name"]
 		tkMessageBox.showinfo("Display List", self.database_string)
 	
 	def DebugMode(self):
-		pdb.set_trace()
+		self.DB.g.write_svg("graph.svg", labels = "name", layout = self.DB.g.layout_kamada_kawai())
+		set_trace()
 
 class RatingWindow:
-	def __init__(self, database):
-		self.DB = database
+	def __init__(self, mainwindow):
+		self.DB = mainwindow.DB
+		self.mainwindow = mainwindow
 		self.GeneratePair()
 		self.MakeUI()
 		
@@ -267,4 +270,14 @@ class RatingWindow:
 	def RatingButtonPressed(self, rating):
 		self.DB.update_rating_in_edgelist(rating)
 		self.root.destroy()
+		self.mainwindow.GeneratePairButtonPressed()
+		
+def main():
+	
+	mainwindow = MainWindow()
+
+if __name__ == '__main__':
+    main()
+		
+
 		
