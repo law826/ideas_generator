@@ -84,11 +84,6 @@ class DataBase:
 			
 			draw_number = rand.random()
 			if draw_number >= total_fail_probability:
-				try: 
-					self.g.es.select(_within = [self.two_drawn[0].index, self.two_drawn[1].index])[0]["count"]
-					self.g.es.select(_within = [self.two_drawn[0].index, self.two_drawn[1].index])[0]["count"] = self.g.es.select(_within = [self.two_drawn[0].index, self.two_drawn[1].index])[0]["count"] + 1
-				except (IndexError, KeyError):
-					self.g.es.select(_within = [self.two_drawn[0].index, self.two_drawn[1].index])[0]["count"] = 1
 				pass_fail_gate = 1
 			else:
 				pass
@@ -105,6 +100,11 @@ class DataBase:
 		
 	def update_rating_in_edgelist(self, rating):
 		self.g[self.two_drawn[0], self.two_drawn[1]] = rating
+		try: 
+			self.g.es.select(_within = [self.two_drawn[0].index, self.two_drawn[1].index])[0]["count"]
+			self.g.es.select(_within = [self.two_drawn[0].index, self.two_drawn[1].index])[0]["count"] = self.g.es.select(_within = [self.two_drawn[0].index, self.two_drawn[1].index])[0]["count"] + 1
+		except (IndexError, KeyError):
+			self.g.es.select(_within = [self.two_drawn[0].index, self.two_drawn[1].index])[0]["count"] = 1
 		
 		
 # 	#def append_to_adjacency_matrix_and_save_to_csv(self):
