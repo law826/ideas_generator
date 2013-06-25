@@ -30,7 +30,7 @@ from pdb import *
 class DataBase:
 	def __init__(self):
 		try:
-			with open('graph.p'): pass
+			with open('ideas.graphml'): pass
 			self.load_pickle()
 		except IOError:
 			pass
@@ -91,15 +91,29 @@ class DataBase:
 		
 		return self.two_drawn[0]["name"], self.two_drawn[1]["name"]
 		
-
 	def save_graph(self):
-		self.g.write_pickle("graph.p")
-		#cPickle.dump(self, open('save.p', 'wb'))
+		self.g.write_graphml("ideas.graphml")
+		#self.g.write_pickle("graph.p")
+ 		#cPickle.dump(self, open('save.p', 'w'))
+ 		#es = self.g.es
+# 		set_trace()
+ 		#cPickle.dump(es, open('es.p', 'wb'))
+		#self.g.write_pajek("ideas.net")
+		#self.g.write_ncol("save.ncol")
+		
 	
 	def load_pickle(self):
-		self.g = igraph.Graph.Read_Pickle("graph.p")
+		self.g = igraph.Graph.Read_GraphML("ideas.graphml")
+		#self.g = igraph.Graph.Read_Pickle("graph.p")
+# 		pickle = cPickle.load(open('save.p', 'rb'))
+# 		self.g = pickle.g
+# 		es = cPickle.load(open('es.p', 'rb'))
+		#set_trace()
+		#self.g = igraph.Read_Pajek("ideas.net")
+		#self.g = igraph.Graph.Read_Ncol("save.ncol")
 		
 	def update_rating_in_edgelist(self, rating):
+		#self.g.add_edges((self.two_drawn[0].index, self.two_drawn[1].index))
 		self.g[self.two_drawn[0], self.two_drawn[1]] = rating
 		try: 
 			self.g.es.select(_within = [self.two_drawn[0].index, self.two_drawn[1].index])[0]["count"] # start here
@@ -232,7 +246,7 @@ class MainWindow:
 		tkMessageBox.showinfo("Display List", self.database_string)
 	
 	def DebugMode(self):
-		self.DB.g.write_svg("graph.svg", labels = "name", layout = self.DB.g.layout_kamada_kawai())
+		#self.DB.g.write_svg("graph.svg", labels = "name", layout = self.DB.g.layout_kamada_kawai())
 		set_trace()
 
 class RatingWindow:
