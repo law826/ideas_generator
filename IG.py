@@ -48,6 +48,7 @@ class DataBase:
 			self.g.add_vertices(1)
 			number_of_vertices = self.g.vcount()
 			self.g.vs[number_of_vertices-1]["name"] = item
+		self.save_graph()
 
 	def draw_two(self):
 		# Unconnected first.	
@@ -106,7 +107,7 @@ class DataBase:
 			self.g.es.select(_within = [self.two_drawn[0].index, self.two_drawn[1].index])[0]["count"] = self.g.es.select(_within = [self.two_drawn[0].index, self.two_drawn[1].index])[0]["count"] + 1
 		except (IndexError, KeyError, TypeError):
 			self.g.es.select(_within = [self.two_drawn[0].index, self.two_drawn[1].index])[0]["count"] = 1
-		
+		self.save_graph()
 		
 # 	#def append_to_adjacency_matrix_and_save_to_csv(self):
 # 		# Add to edgelist.
@@ -213,7 +214,6 @@ class MainWindow:
 			tkMessageBox.showerror("Tkinter Entry Widget", "Enter a text value")
 		else:			
 			self.DB.append_to_graph(self.entryWidget.get().strip())
-			self.DB.save_graph()
 			tkMessageBox.showinfo("Confirmation", self.entryWidget.get().strip() + " has been added.")
 			self.entryWidget.delete(0, END)	
 			
