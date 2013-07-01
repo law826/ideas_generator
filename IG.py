@@ -24,6 +24,7 @@ import tkMessageBox
 import cPickle
 import numpy as np
 import igraph
+import getpass
 from pdb import *
 
 
@@ -98,6 +99,7 @@ class DataBase:
 		self.g.write_pickle(os.sep.join([self.save_path, "graph.p"]))
 	
 	def load_pickle(self):
+		self.username=getpass.getuser()
 		self.g = igraph.Graph.Read_Pickle(os.sep.join([self.save_path, "graph.p"]))
 		
 	def update_rating_in_edgelist(self, rating):
@@ -108,31 +110,6 @@ class DataBase:
 		except (IndexError, KeyError, TypeError):
 			self.g.es.select(_within = [self.two_drawn[0].index, self.two_drawn[1].index])[0]["count"] = 1
 		self.save_graph()
-		
-		
-# 	#def append_to_adjacency_matrix_and_save_to_csv(self):
-# 		# Add to edgelist.
-# 		if self.term_index==0:
-# 			self.adjacency_matrix = np.zeros((2, 2))
-# 			self.adjacency_matrix[1,1]=0.5
-# 		else:
-# 			self.row_to_add = np.empty([1, self.adjacency_matrix.shape[1]])
-# 			self.row_to_add.fill(0.5)
-# 			self.row_to_add[0,0]=self.term_index
-# 			self.adjacency_matrix=np.concatenate((self.adjacency_matrix, self.row_to_add), axis=0)
-# 			self.column_to_add = np.empty([self.adjacency_matrix.shape[0], 1])
-# 			self.column_to_add.fill(0.5)
-# 			self.column_to_add[0,0]=self.term_index
-# 			self.adjacency_matrix=np.concatenate((self.adjacency_matrix, self.column_to_add), axis=1)
-# 			
-# 		if self.term_index!=0:
-# 			print self.adjacency_matrix
-# 		
-# 		self.term_index=self.term_index+1
-# 		np.savetxt("adjacency_matrix.csv", self.adjacency_matrix, fmt='%10.2f')
-# 		
-# 	#def export_csv_to_graph(self):
-# 		graph = igraph.Graph.Read_Adjacency("adjacency_matrix.csv")
 
 class MainWindow:
 	def __init__(self):
