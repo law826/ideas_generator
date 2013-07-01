@@ -118,10 +118,7 @@ class DataBase:
 		except (IndexError, KeyError, TypeError):
 			self.g.es.select(_within = [self.two_drawn[0].index, self.two_drawn[1].index])[0]["count"] = 1
 		self.save_graph()
-	
-
 		
-
 class MainWindow:
 	def __init__(self):
 		self.DB = DataBase()
@@ -148,22 +145,15 @@ class MainWindow:
 		self.entryWidget.pack(side=LEFT)
 		self.textFrame.pack()
 		
-		
 		# Buttons
-		self.add_button = Button(self.root, text="Add Concept", default="active", command=self.AddButtonPressed, takefocus=1)
+		self.add_button = Button(self.root, text="Add Concept", default="normal", command=self.AddButtonClicked, takefocus=1)
+		self.add_button.bind("<Return>", self.AddButtonPressed)
 		self.add_button.pack()
 
-		self.generate_pair_button = Button(self.root, text="Generate Pair", default="normal", command=self.GeneratePairButtonPressed, takefocus=1)
-		self.generate_pair_button.pack()
-		
-		self.display_database_button = Button(self.root, text="Display Database", default="normal", command=self.ManageDatabase, takefocus=1)
-		self.display_database_button.pack()
-		
-		self.debug_mode_button = Button(self.root, text="Debug Mode", default="normal", command=self.DebugMode, takefocus=1)
-		self.debug_mode_button.pack()
-		
-		self.set_save_path_button = Button(self.root, text="Set Save Path", default="normal", command=self.SetPathButtonPressed, takefocus=1)
-		self.set_save_path_button.pack()
+		self.generate_pair_button = Button(self.root, text="Generate Pair", default="normal", command=self.GeneratePairButtonPressed, takefocus=1).pack()		
+		self.display_database_button = Button(self.root, text="Display Database", default="normal", command=self.ManageDatabaseButtonPressed, takefocus=1).pack()
+		self.debug_mode_button = Button(self.root, text="Debug Mode", default="normal", command=self.DebugModeButtonPressed, takefocus=1).pack()
+		self.set_save_path_button = Button(self.root, text="Set Save Path", default="normal", command=self.SetPathButtonPressed, takefocus=1).pack()
 		
 		# Recent data base items.
 		self.databaselabelFrame = Frame(self.root)
@@ -185,10 +175,8 @@ class MainWindow:
 		self.databasedisplayFrame.pack()
 		self.root.lift()
 		self.root.mainloop()	
-		
-	def AddButtonPressed(self):
-		global entryWidget
-		
+			
+	def AddButtonClicked(self):
 		if self.entryWidget.get().strip() == "":
 			tkMessageBox.showerror("Tkinter Entry Widget", "Enter a text value")
 		else:			
@@ -196,11 +184,14 @@ class MainWindow:
 			self.DB.save_graph()
 			tkMessageBox.showinfo("Confirmation", self.entryWidget.get().strip() + " has been added.")
 			self.entryWidget.delete(0, END)	
+	
+	def AddButtonPressed(self, event):
+		self.AddButtonClicked()
 			
 	def GeneratePairButtonPressed(self):
 		RatingWindow(self)
 					
-	def ManageDatabase(self):
+	def ManageDatabaseButtonPressed(self):
 		for member_count, member in enumerate(self.DB.g.vs["name"]):
 			print member_count
 			if member_count==0:
@@ -213,7 +204,7 @@ class MainWindow:
 		# listbox = Listbox(master)
 		# listbox.pack()
 	
-	def DebugMode(self):
+	def DebugModeButtonPressed(self):
 		self.DB.g.write_svg("graph.svg", labels = "name", layout = self.DB.g.layout_kamada_kawai())
 		set_trace()
 	
