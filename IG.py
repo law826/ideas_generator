@@ -16,6 +16,8 @@ To do list:
 [] set default behavior of text boxes and buttons
 [] make window the default focus
 """
+import os
+import sys
 import random as rand
 from Tkinter import *
 import tkMessageBox
@@ -29,7 +31,8 @@ from pdb import *
 class DataBase:
 	def __init__(self):
 		try:
-			with open('graph.p'): pass
+			with open('save.p'): cPickle.load
+			self.save_path = cPickle.load(open('save.p', 'rb'))
 			self.load_pickle()
 		except IOError:
 			pass
@@ -92,11 +95,10 @@ class DataBase:
 		
 
 	def save_graph(self):
-		self.g.write_pickle("graph.p")
-		#cPickle.dump(self, open('save.p', 'wb'))
+		self.g.write_pickle(os.sep.join([self.save_path, "graph.p"]))
 	
 	def load_pickle(self):
-		self.g = igraph.Graph.Read_Pickle("graph.p")
+		self.g = igraph.Graph.Read_Pickle(os.sep.join([self.save_path, "graph.p"]))
 		
 	def update_rating_in_edgelist(self, rating):
 		self.g[self.two_drawn[0], self.two_drawn[1]] = rating
@@ -225,14 +227,16 @@ class MainWindow:
 					
 	def ManageDatabase(self):
 		for member_count, member in enumerate(self.DB.g.vs["name"]):
-			listbox = Listbox(master)
-			listbox.pack()
 			print member_count
 			if member_count==0:
-				self.database_string = self.DB.g.vs["name"]
+				self.database_string = self.DB.g.vs[member_count]["name"]
 			else:
-				self.database_string = self.database_string+"\r"+self.DB.g.vs["name"]
+				self.database_string = self.database_string+"\r"+self.DB.g.vs[member_count]["name"]
 		tkMessageBox.showinfo("Display List", self.database_string)
+		
+		# To make the list more functional:
+		# listbox = Listbox(master)
+		# listbox.pack()
 	
 	def DebugMode(self):
 		self.DB.g.write_svg("graph.svg", labels = "name", layout = self.DB.g.layout_kamada_kawai())
@@ -269,7 +273,8 @@ class MainWindow:
 		else:
 			self.DB.save_path = self.path_entryWidget.get().strip()
 		
-		self.DB.save_graph()
+		cPickle.dump(self.DB.save_path, open('save.p', 'wb'))
+		
 		self.path_root.destroy()
 
 class RatingWindow:
