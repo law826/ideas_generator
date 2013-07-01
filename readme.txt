@@ -13,4 +13,6 @@ and hopefully influential ideas by unlocking the vast contents of their long-ter
 memories for processing in their working memories. 
 
 To start: 
-Make sure to the set the path for where you want to save your files.
+
+- Install igraph on your system. 
+- Set the path for where you want to save your files with the set path button.
