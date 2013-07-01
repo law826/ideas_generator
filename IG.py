@@ -133,19 +133,6 @@ class DataBase:
 # 		
 # 	#def export_csv_to_graph(self):
 # 		graph = igraph.Graph.Read_Adjacency("adjacency_matrix.csv")
-		
-class Item:
-    def __init__(self, item, index):
-    	self.item_name = item
-    	self.score = 5
-    	self.count = 0
-    	self.edgelist_index = index
-    	
-    def assign_score(self, score):
-    	self.score = score
-    
-    def increase_count(self):
-    	self.count = self.count+1
 
 class MainWindow:
 	def __init__(self):
