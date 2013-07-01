@@ -143,6 +143,7 @@ class MainWindow:
 		self.entryWidget = Entry(self.textFrame)
 		self.entryWidget["width"] = 50
 		self.entryWidget.pack(side=LEFT)
+		self.entryWidget.focus_set()
 		self.textFrame.pack()
 		
 		# Buttons
@@ -155,24 +156,6 @@ class MainWindow:
 		self.debug_mode_button = Button(self.root, text="Debug Mode", default="normal", command=self.DebugModeButtonPressed, takefocus=1).pack()
 		self.set_save_path_button = Button(self.root, text="Set Save Path", default="normal", command=self.SetPathButtonPressed, takefocus=1).pack()
 		
-		# Recent data base items.
-		self.databaselabelFrame = Frame(self.root)
-		
-		# Create a Label in textFrame
-		self.databaseLabel = Label(self.databaselabelFrame)
-		self.databaseLabel["text"] = "Recently Entered Items"
-		self.databaseLabel.pack(side=TOP)
-		
-		self.databaselabelFrame.pack()
-	
-		self.databasedisplayFrame = Frame(self.root)
-		# Create an Database Widget in textFrame
-		self.databaseDisplay = Label(self.databasedisplayFrame)
-		self.database_string = "No items yet"
-		self.databaseLabel["text"] = self.database_string
-		self.databaseDisplay.pack(side=TOP)
-		
-		self.databasedisplayFrame.pack()
 		self.root.lift()
 		self.root.mainloop()	
 			
@@ -184,10 +167,11 @@ class MainWindow:
 			self.DB.save_graph()
 			tkMessageBox.showinfo("Confirmation", self.entryWidget.get().strip() + " has been added.")
 			self.entryWidget.delete(0, END)	
+		self.entryWidget.focus_set()
 	
 	def AddButtonPressed(self, event):
 		self.AddButtonClicked()
-			
+		
 	def GeneratePairButtonPressed(self):
 		RatingWindow(self)
 					
