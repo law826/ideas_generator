@@ -32,12 +32,28 @@ from pdb import *
 class DataBase:
 	def __init__(self):
 		try:
-			with open('save.p'): cPickle.load
-			self.save_path = cPickle.load(open('save.p', 'rb'))
-			self.load_pickle()
+			self.load_path_settings()
+			self.load_graph()
 		except IOError:
 			pass
+		
+	def load_path_settings(self):	
+		
+		# Load pickle from old session.
+		with open('path_settings.p'): cPickle.load
+		self.path_settings = cPickle.load(open('path_settings.p', 'rb'))
+	
+		# Makes the saving and loading of paths compatible across multiple computers if using Dropbox on multiple computers with different user names. 
+		self.old_username = self.path_settings.username # Username from the previous session. 
+		self.new_username = getpass.getuser()
+		self.save_path = self.path_settings.save_path.replace(self.old_username, self.new_username)
+
+	def load_graph(self):
+		self.g = igraph.Graph.Read_Pickle(os.sep.join([self.save_path, "graph.p"]))
 				
+	def save_graph(self):
+		self.g.write_pickle(os.sep.join([self.save_path, "graph.p"]))
+		
 	def append_to_graph(self, item):
 		try:
 			self.g
@@ -94,15 +110,7 @@ class DataBase:
 		
 		return self.two_drawn[0]["name"], self.two_drawn[1]["name"]
 		
-
-	def save_graph(self):
-		self.g.write_pickle(os.sep.join([self.save_path, "graph.p"]))
-	
-	def load_pickle(self):
-		self.username=getpass.getuser()
-		self.g = igraph.Graph.Read_Pickle(os.sep.join([self.save_path, "graph.p"]))
-		
-	def update_rating_in_edgelist(self, rating):
+	def update_edge(self, rating):
 		self.g[self.two_drawn[0], self.two_drawn[1]] = rating
 		try: 
 			self.g.es.select(_within = [self.two_drawn[0].index, self.two_drawn[1].index])[0]["count"] # start here
@@ -110,6 +118,9 @@ class DataBase:
 		except (IndexError, KeyError, TypeError):
 			self.g.es.select(_within = [self.two_drawn[0].index, self.two_drawn[1].index])[0]["count"] = 1
 		self.save_graph()
+	
+
+		
 
 class MainWindow:
 	def __init__(self):
@@ -236,9 +247,7 @@ class MainWindow:
 			tkMessageBox.showerror("Tkinter Entry Widget", "Enter a save path")
 		else:
 			self.DB.save_path = self.path_entryWidget.get().strip()
-		
-		cPickle.dump(self.DB.save_path, open('save.p', 'wb'))
-		
+		path_settings = PathSettings(self.DB.save_path)
 		self.path_root.destroy()
 
 class RatingWindow:
@@ -274,9 +283,16 @@ class RatingWindow:
 		self.root.mainloop()	
 		
 	def RatingButtonPressed(self, rating):
-		self.DB.update_rating_in_edgelist(rating)
+		self.DB.update_edge(rating)
 		self.root.destroy()
 		self.mainwindow.GeneratePairButtonPressed()
+
+class PathSettings:
+	def __init__(self, save_path):
+		self.username=getpass.getuser()
+		self.save_path = save_path
+		cPickle.dump(self, open('path_settings.p', 'wb'))
+		
 		
 def main():
 	
