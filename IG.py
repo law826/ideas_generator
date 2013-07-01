@@ -106,6 +106,7 @@ class DataBase:
 			self.g.es.select(_within = [self.two_drawn[0].index, self.two_drawn[1].index])[0]["count"] = self.g.es.select(_within = [self.two_drawn[0].index, self.two_drawn[1].index])[0]["count"] + 1
 		except (IndexError, KeyError, TypeError):
 			self.g.es.select(_within = [self.two_drawn[0].index, self.two_drawn[1].index])[0]["count"] = 1
+		self.save_graph()
 		
 		
 # 	#def append_to_adjacency_matrix_and_save_to_csv(self):
