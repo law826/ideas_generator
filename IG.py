@@ -7,14 +7,13 @@ Created by VL and LN on 2012-08-15.
 Copyright (c) 2012 __MyCompanyName__. All rights reserved.
 
 To do list:
-[] implement graph theory engine
+[] implement smart correlations
+[] set path for save files within gui
 [] term management
 [] make buttons tabable
-[] press return
-[] save list
+[] bind return key to add a concept
 [] delete item from list
 [] set default behavior of text boxes and buttons
-[] implement smart correlations
 [] make window the default focus
 """
 import random as rand
@@ -186,6 +185,9 @@ class MainWindow:
 		self.debug_mode_button = Button(self.root, text="Debug Mode", default="normal", command=self.DebugMode, takefocus=1)
 		self.debug_mode_button.pack()
 		
+		self.set_save_path_button = Button(self.root, text="Set Save Path", default="normal", command=self.SetPathButtonPressed, takefocus=1)
+		self.set_save_path_button.pack()
+		
 		# Recent data base items.
 		self.databaselabelFrame = Frame(self.root)
 		
@@ -235,6 +237,40 @@ class MainWindow:
 	def DebugMode(self):
 		self.DB.g.write_svg("graph.svg", labels = "name", layout = self.DB.g.layout_kamada_kawai())
 		set_trace()
+	
+	def SetPathButtonPressed(self):
+		self.path_root = Tk()
+		
+		# Create a text frame to hold the text Label and the Entry widget
+		self.path_textFrame = Frame(self.path_root)		
+				
+		# Create a Label in textFrame
+		self.path_entryLabel = Label(self.path_textFrame)
+		self.path_entryLabel["text"] = "Enter the save path:"
+		self.entryLabel.pack(side=LEFT)
+	
+		# Create an Entry Widget in textFrame
+		self.path_entryWidget = Entry(self.path_textFrame)
+		self.path_entryWidget["width"] = 50
+		self.path_entryWidget.pack(side=LEFT)
+		self.path_textFrame.pack()
+		
+		self.path_root.title("Please set the path for save files")
+		
+		self.path_add_button = Button(self.path_root, text="OK", default="active", command=self.SetPath, takefocus=1)
+		self.path_add_button.pack()
+		
+		self.path_root.mainloop()
+	
+	def SetPath(self):
+		
+		if self.path_entryWidget.get().strip() == "":
+			tkMessageBox.showerror("Tkinter Entry Widget", "Enter a save path")
+		else:
+			self.DB.save_path = self.path_entryWidget.get().strip()
+		
+		self.DB.save_graph()
+		self.path_root.destroy()
 
 class RatingWindow:
 	def __init__(self, mainwindow):
