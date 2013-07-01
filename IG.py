@@ -170,11 +170,13 @@ class MainWindow:
 		self.entryWidget = Entry(self.textFrame)
 		self.entryWidget["width"] = 50
 		self.entryWidget.pack(side=LEFT)
+		#self.entryWidget.bind("<Return>", self.AddButtonPressed())
+		self.entryWidget.focus_set()
 		self.textFrame.pack()
 		
 		
 		# Buttons
-		self.add_button = Button(self.root, text="Add Concept", default="active", command=self.AddButtonPressed, takefocus=1)
+		self.add_button = Button(self.root, text="Add Concept", default="normal", command=self.AddButtonPressed, takefocus=1)
 		self.add_button.pack()
 
 		self.generate_pair_button = Button(self.root, text="Generate Pair", default="normal", command=self.GeneratePairButtonPressed, takefocus=1)

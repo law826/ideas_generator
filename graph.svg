@@ -20,7 +20,7 @@ width="400px" height="400px"> <defs id="defs3">
 <g inkscape:groupmode="layer" id="layer2" inkscape:label="Lines" sodipodi:insensitive="true">
 <path
     style="fill:none;stroke:black;stroke-width:2;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
-    d="M 284.444095826,390.0 271.403824248,168.868887774"
+    d="M 307.978135658,223.210917971 225.48306345,129.67326956"
     id="path0"
     inkscape:connector-type="polyline"
     inkscape:connector-curvature="0"
@@ -30,7 +30,7 @@ width="400px" height="400px"> <defs id="defs3">
     inkscape:connection-end-point="d4" />
 <path
     style="fill:none;stroke:black;stroke-width:2;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
-    d="M 377.376875796,140.600257434 389.457222776,362.837641919"
+    d="M 302.000654965,10.0 383.491603503,105.060539812"
     id="path1"
     inkscape:connector-type="polyline"
     inkscape:connector-curvature="0"
@@ -40,7 +40,7 @@ width="400px" height="400px"> <defs id="defs3">
     inkscape:connection-end-point="d4" />
 <path
     style="fill:none;stroke:black;stroke-width:2;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
-    d="M 110.527100413,178.273641287 189.409350727,313.30007876"
+    d="M 91.5818945742,287.441850304 199.924110193,278.487939084"
     id="path2"
     inkscape:connector-type="polyline"
     inkscape:connector-curvature="0"
@@ -50,7 +50,7 @@ width="400px" height="400px"> <defs id="defs3">
     inkscape:connection-end-point="d4" />
 <path
     style="fill:none;stroke:black;stroke-width:2;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
-    d="M 284.444095826,390.0 380.129832116,374.429071904"
+    d="M 307.978135658,223.210917971 384.041774695,120.683853275"
     id="path3"
     inkscape:connector-type="polyline"
     inkscape:connector-curvature="0"
@@ -60,7 +60,7 @@ width="400px" height="400px"> <defs id="defs3">
     inkscape:connection-end-point="d4" />
 <path
     style="fill:none;stroke:black;stroke-width:2;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
-    d="M 110.527100413,178.273641287 19.9388179814,188.340614051"
+    d="M 91.5818945742,287.441850304 16.2253080152,382.174047015"
     id="path4"
     inkscape:connector-type="polyline"
     inkscape:connector-curvature="0"
@@ -70,7 +70,7 @@ width="400px" height="400px"> <defs id="defs3">
     inkscape:connection-end-point="d4" />
 <path
     style="fill:none;stroke:black;stroke-width:2;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
-    d="M 194.453634023,321.934614418 266.573871033,167.942258347"
+    d="M 209.890133402,277.664299965 218.292102298,132.156744379"
     id="path5"
     inkscape:connector-type="polyline"
     inkscape:connector-curvature="0"
@@ -80,7 +80,7 @@ width="400px" height="400px"> <defs id="defs3">
     inkscape:connection-end-point="d4" />
 <path
     style="fill:none;stroke:black;stroke-width:2;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
-    d="M 186.070995593,10.0 265.868441087,150.19542039"
+    d="M 98.8578805657,130.261899548 208.891202616,122.845831972"
     id="path6"
     inkscape:connector-type="polyline"
     inkscape:connector-curvature="0"
@@ -90,7 +90,7 @@ width="400px" height="400px"> <defs id="defs3">
     inkscape:connection-end-point="d4" />
 <path
     style="fill:none;stroke:black;stroke-width:2;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
-    d="M 284.444095826,390.0 202.429211761,327.967040111"
+    d="M 307.978135658,223.210917971 218.633217561,272.810592167"
     id="path7"
     inkscape:connector-type="polyline"
     inkscape:connector-curvature="0"
@@ -100,7 +100,7 @@ width="400px" height="400px"> <defs id="defs3">
     inkscape:connection-end-point="d4" />
 <path
     style="fill:none;stroke:black;stroke-width:2;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
-    d="M 186.070995593,10.0 114.622664439,169.150793305"
+    d="M 98.8578805657,130.261899548 92.0443074222,277.452547308"
     id="path8"
     inkscape:connector-type="polyline"
     inkscape:connector-curvature="0"
@@ -110,7 +110,7 @@ width="400px" height="400px"> <defs id="defs3">
     inkscape:connection-end-point="d4" />
 <path
     style="fill:none;stroke:black;stroke-width:2;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
-    d="M 377.376875796,140.600257434 280.67108063,157.194952727"
+    d="M 302.000654965,10.0 224.822724599,114.139196336"
     id="path9"
     inkscape:connector-type="polyline"
     inkscape:connector-curvature="0"
@@ -122,42 +122,42 @@ width="400px" height="400px"> <defs id="defs3">
 
   <g inkscape:label="Nodes"                     inkscape:groupmode="layer" id="layer1">
   <!-- Vertices -->
-    <g id="g0" transform="translate(377.376875796,140.600257434)">
+    <g id="g0" transform="translate(302.000654965,10.0)">
      <circle cx="0" cy="0" r="10" fill="red"/>
       <text sodipodi:linespacing="125%" y="5.0" x="0" id="text0" style="font-size:16pxpx;font-style:normal;font-weight:normal;text-align:center;line-height:125%;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans">
 <tspan y="5.0" x="0" id="tspan0" sodipodi:role="line">fresh made pasta</tspan></text>
     </g>
-    <g id="g1" transform="translate(186.070995593,10.0)">
+    <g id="g1" transform="translate(98.8578805657,130.261899548)">
      <circle cx="0" cy="0" r="10" fill="red"/>
       <text sodipodi:linespacing="125%" y="5.0" x="0" id="text1" style="font-size:16pxpx;font-style:normal;font-weight:normal;text-align:center;line-height:125%;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans">
 <tspan y="5.0" x="0" id="tspan1" sodipodi:role="line">ideas generator</tspan></text>
     </g>
-    <g id="g2" transform="translate(110.527100413,178.273641287)">
+    <g id="g2" transform="translate(91.5818945742,287.441850304)">
      <circle cx="0" cy="0" r="10" fill="red"/>
       <text sodipodi:linespacing="125%" y="5.0" x="0" id="text2" style="font-size:16pxpx;font-style:normal;font-weight:normal;text-align:center;line-height:125%;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans">
 <tspan y="5.0" x="0" id="tspan2" sodipodi:role="line">simplicity</tspan></text>
     </g>
-    <g id="g3" transform="translate(284.444095826,390.0)">
+    <g id="g3" transform="translate(307.978135658,223.210917971)">
      <circle cx="0" cy="0" r="10" fill="red"/>
       <text sodipodi:linespacing="125%" y="5.0" x="0" id="text3" style="font-size:16pxpx;font-style:normal;font-weight:normal;text-align:center;line-height:125%;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans">
 <tspan y="5.0" x="0" id="tspan3" sodipodi:role="line">medical decision making</tspan></text>
     </g>
-    <g id="g4" transform="translate(10.0,189.445103586)">
+    <g id="g4" transform="translate(10.0,390.0)">
      <circle cx="0" cy="0" r="10" fill="red"/>
       <text sodipodi:linespacing="125%" y="5.0" x="0" id="text4" style="font-size:16pxpx;font-style:normal;font-weight:normal;text-align:center;line-height:125%;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans">
 <tspan y="5.0" x="0" id="tspan4" sodipodi:role="line">charleston</tspan></text>
     </g>
-    <g id="g5" transform="translate(194.453634023,321.934614418)">
+    <g id="g5" transform="translate(209.890133402,277.664299965)">
      <circle cx="0" cy="0" r="10" fill="red"/>
       <text sodipodi:linespacing="125%" y="5.0" x="0" id="text5" style="font-size:16pxpx;font-style:normal;font-weight:normal;text-align:center;line-height:125%;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans">
 <tspan y="5.0" x="0" id="tspan5" sodipodi:role="line">lebanese potato salad</tspan></text>
     </g>
-    <g id="g6" transform="translate(390.0,372.822900698)">
+    <g id="g6" transform="translate(390.0,112.652692013)">
      <circle cx="0" cy="0" r="10" fill="red"/>
       <text sodipodi:linespacing="125%" y="5.0" x="0" id="text6" style="font-size:16pxpx;font-style:normal;font-weight:normal;text-align:center;line-height:125%;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans">
 <tspan y="5.0" x="0" id="tspan6" sodipodi:role="line">biking along the pennsylvania canal</tspan></text>
     </g>
-    <g id="g7" transform="translate(270.815139268,158.886230313)">
+    <g id="g7" transform="translate(218.868566996,122.173373783)">
      <circle cx="0" cy="0" r="10" fill="red"/>
       <text sodipodi:linespacing="125%" y="5.0" x="0" id="text7" style="font-size:16pxpx;font-style:normal;font-weight:normal;text-align:center;line-height:125%;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans">
 <tspan y="5.0" x="0" id="tspan7" sodipodi:role="line">stand up paddleboard at lake nacamixon</tspan></text>
