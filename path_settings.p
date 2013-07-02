@@ -1,0 +1,13 @@
+(i__main__
+PathSettings
+p1
+(dp2
+S'username'
+p3
+S'ln30'
+p4
+sS'save_path'
+p5
+S'/Users/ln30/Dropbox/Personal/ideas_generator'
+p6
+sb.
