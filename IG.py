@@ -29,7 +29,6 @@ import igraph
 import getpass
 from pdb import *
 
-
 # This will contain all the items and methods relevant to the items. 
 class DataBase:
 	def __init__(self):
@@ -189,7 +188,7 @@ class MainWindow:
 		# listbox.pack()
 	
 	def DebugModeButtonPressed(self):
-		self.DB.g.write_svg("graph.svg", labels = "name", layout = self.DB.g.layout_kamada_kawai())
+		#self.DB.g.write_svg("graph.svg", labels = "name", layout = self.DB.g.layout_kamada_kawai())
 		set_trace()
 	
 	def SetPathButtonPressed(self):
