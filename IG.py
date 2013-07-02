@@ -51,8 +51,8 @@ class DataBase:
 		self.save_path = self.path_settings.save_path.replace(self.old_username, self.new_username)
 
 	def load_graph(self):
+		import pdb; pdb.set_trace()
 		self.g = igraph.Graph.Read_Pickle(os.sep.join([self.save_path, "graph.p"]))
-				
 	def save_graph(self):
 		self.g.write_pickle(os.sep.join([self.save_path, "graph.p"]))
 		
