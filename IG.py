@@ -69,12 +69,10 @@ class DataBase:
 			number_of_vertices = self.g.vcount()
 			self.g.vs[number_of_vertices-1]["name"] = item
 
+
 	def draw_two(self):
 		self.random_with_count_weight_fail_gate()
-		self.betweenness_search()
-
-
-		return self.two_drawn[0]["name"], self.two_drawn[1]["name"]
+		return self.two_drawn[0]["name"], self.two_drawn[1]["name"], self.count_of_selected_edge, self.weight_of_selected_edge
 
 
 		# Unconnected first.	
@@ -127,7 +125,7 @@ class DataBase:
 		max_betweenness_vertex_list_pos = [i for i, j in enumerate(betweenness) if j == max_betweenness][0]
 		max_vertex = non_zero_graph.vs[max_betweenness_vertex_list_pos]
 		return max_vertex
-		
+
 	def update_edge(self, rating):
 		self.g[self.two_drawn[0], self.two_drawn[1]] = rating
 		try: 
@@ -252,7 +250,7 @@ class RatingWindow:
 		self.MakeUI()
 		
 	def GeneratePair(self):
-		self.Item1, self.Item2 = self.DB.draw_two()
+		self.Item1, self.Item2, self.count, self.weight = self.DB.draw_two()
 		
 	def MakeUI(self):
 		
@@ -263,8 +261,8 @@ class RatingWindow:
 		self.textFrame = Frame(self.root)	
 						
 		# Create a Label in textFrame
-		self.entryLabel = Label(self.root, text=self.Item1 + "   " + self.Item2)
-		self.entryLabel.pack()
+		self.pairLabel = Label(self.root, text=self.Item1 + "   " + self.Item2).pack()
+		self.countweightLabel = Label(self.root, text='weight = ' + str(self.weight) + "   " + 'count = ' + str(self.count)).pack()
 		
 		# Buttons
 		button1 = Button(self.root, text="1", default="active", command = lambda: self.RatingButtonPressed(1), takefocus=1).pack()
