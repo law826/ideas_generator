@@ -62,7 +62,7 @@ class DataBase:
 			self.g = igraph.Graph()
 			self.g.add_vertices(1)
 			self.g.es["weight"] = 1.0
-			self.g["name"] = "Ideas Graph"
+			self.g["name"] = "Ideas Graph"			
 			self.g.vs[0]["name"] = item
 		else:
 			self.g.add_vertices(1)
@@ -70,6 +70,13 @@ class DataBase:
 			self.g.vs[number_of_vertices-1]["name"] = item
 
 	def draw_two(self):
+		self.random_with_count_weight_fail_gate()
+		self.betweenness_search()
+
+
+		return self.two_drawn[0]["name"], self.two_drawn[1]["name"]
+
+
 		# Unconnected first.	
 # 		try: 
 # 			degree_fraction = [x/sum(self.g.vs.indegree()) for x in self.g.vs.indegree()]
@@ -78,9 +85,11 @@ class DataBase:
 # 			pass
 # 		np.random.multinomial(2, *degree_fraction)
 
-		unconnected_total_probability = 0.5
+		#unconnected_total_probability = 0.5
 		#self.vertex_sequence_of_unconnected = self.g.vs.select(_degree_eq=0)
-		
+
+	def random_with_count_weight_fail_gate(self):
+
 		pass_fail_gate = 0
 		while pass_fail_gate==0:
 			self.two_drawn = rand.sample(self.g.vs, 2)
@@ -107,16 +116,27 @@ class DataBase:
 				pass_fail_gate = 1
 			else:
 				pass
-		
-		return self.two_drawn[0]["name"], self.two_drawn[1]["name"]
+
+	def betweenness_max_vertex_search(self):
+
+		non_zero_normed_edgeseq = self.g.es.select(weight_count_normed_gt=1)
+		non_zero_edge_index_list = [edge.index for edge in non_zero_normed_edgeseq]
+		non_zero_graph = self.g.subgraph_edges(non_zero_edge_index_list)
+		betweenness = non_zero_graph.betweenness(weights='weight_count_normed')
+		max_betweenness = max(betweenness)
+		max_betweenness_vertex_list_pos = [i for i, j in enumerate(betweenness) if j == max_betweenness][0]
+		max_vertex = non_zero_graph.vs[max_betweenness_vertex_list_pos]
+		return max_vertex
 		
 	def update_edge(self, rating):
 		self.g[self.two_drawn[0], self.two_drawn[1]] = rating
 		try: 
-			self.g.es.select(_within = [self.two_drawn[0].index, self.two_drawn[1].index])[0]["count"] # start here
-			self.g.es.select(_within = [self.two_drawn[0].index, self.two_drawn[1].index])[0]["count"] = self.g.es.select(_within = [self.two_drawn[0].index, self.two_drawn[1].index])[0]["count"] + 1
+			edge_count = self.g.es.select(_within=[self.two_drawn[0].index, self.two_drawn[1].index])[0]["count"] # start here
+			self.g.es.select(_within=[self.two_drawn[0].index, self.two_drawn[1].index])[0]["count"] = edge_count + 1
 		except (IndexError, KeyError, TypeError):
-			self.g.es.select(_within = [self.two_drawn[0].index, self.two_drawn[1].index])[0]["count"] = 1
+			self.g.es.select(_within=[self.two_drawn[0].index, self.two_drawn[1].index])[0]["count"] = 1
+			edge_count=1
+		self.g.es.select(_within=[self.two_drawn[0].index, self.two_drawn[1].index])[0]["weight_count_normed"] = rating/edge_count # Normalized weight count attribute.
 		self.save_graph()
 		
 class MainWindow:
@@ -127,7 +147,7 @@ class MainWindow:
 	def MakeUI(self):
 		
 		self.root = Tk()
-		self.root.title("Tkinter Entry Widget")
+		self.root.title("Ideas Generator")
 		self.root["padx"] = 40
 		self.root["pady"] = 20       
 			
