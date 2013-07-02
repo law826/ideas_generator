@@ -85,7 +85,6 @@ class DataBase:
 		pass_fail_gate = 0
 		while pass_fail_gate==0:
 			self.two_drawn = rand.sample(self.g.vs, 2)
-			print pass_fail_gate
 			# Query edge characteristics for pass/fail.
 			# Identify the edge of the chosen vertices.
 			try:
@@ -179,7 +178,6 @@ class MainWindow:
 					
 	def ManageDatabaseButtonPressed(self):
 		for member_count, member in enumerate(self.DB.g.vs["name"]):
-			print member_count
 			if member_count==0:
 				self.database_string = self.DB.g.vs[member_count]["name"]
 			else:
