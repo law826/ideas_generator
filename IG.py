@@ -171,17 +171,28 @@ class MainWindow:
 		self.entryWidget["width"] = 50
 		self.entryWidget.pack(side=LEFT)
 		self.entryWidget.focus_set()
+		self.entryWidget.bind("<Return>", self.AddButtonPressed)
 		self.textFrame.pack()
 		
 		# Buttons
-		self.add_button = Button(self.root, text="Add Concept", default="normal", command=self.AddButtonPressed, takefocus=1)
-		self.add_button.bind("<Return>", self.AddButtonPressed)
-		self.add_button.pack()
+		button_labels = [
+			'Add Concept', 
+			'Generate Pair', 
+			'Manage Database', 
+			'Debug Mode', 
+			'Set Save Path', 
+			]
 
-		self.generate_pair_button = Button(self.root, text="Generate Pair", default="normal", command=self.GeneratePairButtonPressed, takefocus=1).pack()		
-		self.display_database_button = Button(self.root, text="Display Database", default="normal", command=self.ManageDatabaseButtonPressed, takefocus=1).pack()
-		self.debug_mode_button = Button(self.root, text="Debug Mode", default="normal", command=self.DebugModeButtonPressed, takefocus=1).pack()
-		self.set_save_path_button = Button(self.root, text="Set Save Path", default="normal", command=self.SetPath, takefocus=1).pack()
+		button_commands = [
+			self.AddButtonPressed,
+			self.GeneratePairButtonPressed,
+			self.ManageDatabaseButtonPressed,
+			self.DebugModeButtonPressed,self.SetPath,
+			self.SetPath
+			]
+
+		for button_number, label in enumerate(button_labels):
+			b = Button(self.root, text=label, default="normal", command=button_commands[button_number], takefocus=1).pack()
 		
 		self.root.lift()
 
@@ -245,7 +256,7 @@ class RatingWindow:
 		# Buttons
 		buttons = [1, 2, 3, 4, 5]
 		for button in buttons:
-			button = Button(self.root, text=str(button), default="active", command = lambda: self.RatingButtonClicked(button)).pack()
+			b = Button(self.root, text=str(button), default="active", command = lambda: self.RatingButtonClicked(button)).pack()
 
 		# Binding of buttons (including in above seems to throw an error)
 		for button in buttons:
