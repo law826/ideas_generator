@@ -4,10 +4,10 @@ p1
 (dp2
 S'username'
 p3
-S'ln30'
+S'law826'
 p4
 sS'save_path'
 p5
-S'/Users/ln30/Dropbox/Personal/ideas_generator'
+S'blah'
 p6
 sb.

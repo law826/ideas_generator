@@ -31,29 +31,33 @@ from pdb import *
 
 # This will contain all the items and methods relevant to the items. 
 class DataBase:
-	def __init__(self):
+	def __init__(self, mainwindow):
+		self.mainwindow = mainwindow
+		self.load_user_settings()
 		try:
-			self.load_path_settings()
 			self.load_graph()
-		except IOError:
+		except (cPickle.UnpicklingError):
 			pass
 		
-	def load_path_settings(self):	
-		
-		# Load pickle from old session.
-		with open('path_settings.p'): cPickle.load
-		self.path_settings = cPickle.load(open('path_settings.p', 'rb'))
-	
-		# Makes the saving and loading of paths compatible across multiple computers if using Dropbox on multiple computers with different user names. 
-		self.old_username = self.path_settings.username # Username from the previous session. 
-		self.new_username = getpass.getuser()
-		self.save_path = self.path_settings.save_path.replace(self.old_username, self.new_username)
+	def load_user_settings(self):
+		try: 
+			self.user_settings = cPickle.load(open('user_settings.p', 'rb'))
+			if os.getcwd() in self.user_settings:
+				self.save_path = self.user_settings[cwd]
+			else:	
+				mainwindow.SetPathButtonPressed()
+		except (IOError, cPickle.UnpicklingError):
+			self.user_settings = dict()
+			self.mainwindow.SetPathButtonPressed()
 
 	def load_graph(self):
 		self.g = igraph.Graph.Read_Pickle(os.sep.join([self.save_path, "graph.p"]))
 				
 	def save_graph(self):
-		self.g.write_pickle(os.sep.join([self.save_path, "graph.p"]))
+		try:
+			self.g.write_pickle(os.sep.join([self.save_path, "graph.p"]))
+		except:
+			tkMessageBox.showerror("Tkinter Entry Widget", "Enter a valid save path (current path is %s)" %self.save_path)
 		
 	def append_to_graph(self, item):
 		try:
@@ -136,10 +140,10 @@ class DataBase:
 			edge_count=1
 		self.g.es.select(_within=[self.two_drawn[0].index, self.two_drawn[1].index])[0]["weight_count_normed"] = rating/edge_count # Normalized weight count attribute.
 		self.save_graph()
-		
+
 class MainWindow:
 	def __init__(self):
-		self.DB = DataBase()
+		self.DB = DataBase(self)
 		self.MakeUI()
 			
 	def MakeUI(self):
@@ -210,6 +214,11 @@ class MainWindow:
 		set_trace()
 	
 	def SetPathButtonPressed(self):
+		import tkFileDialog; tkFileDialog.askdirectory()
+
+
+
+
 		self.path_root = Tk()
 		
 		# Create a text frame to hold the text Label and the Entry widget
@@ -218,7 +227,12 @@ class MainWindow:
 		# Create a Label in textFrame
 		self.path_entryLabel = Label(self.path_textFrame)
 		self.path_entryLabel["text"] = "Enter the save path:"
-		self.entryLabel.pack(side=LEFT)
+		self.path_entryLabel.pack(side=LEFT)
+
+
+
+		# Ask for directory.
+
 	
 		# Create an Entry Widget in textFrame
 		self.path_entryWidget = Entry(self.path_textFrame)
@@ -239,7 +253,8 @@ class MainWindow:
 			tkMessageBox.showerror("Tkinter Entry Widget", "Enter a save path")
 		else:
 			self.DB.save_path = self.path_entryWidget.get().strip()
-		path_settings = PathSettings(self.DB.save_path)
+			self.DB.user_settings[os.getcwd()] = self.path_entryWidget.get().strip()
+		self.g.write_pickle(os.sep.join([self.DB.user_settings, "user_settings.p"]))
 		self.path_root.destroy()
 
 class RatingWindow:
@@ -261,7 +276,7 @@ class RatingWindow:
 		self.textFrame = Frame(self.root)	
 						
 		# Create a Label in textFrame
-		self.pairLabel = Label(self.root, text=self.Item1 + "   " + self.Item2).pack()
+		self.pairLabel = Label(self.root, text="%s    %s" % (self.Item1, self.Item2)).pack()
 		self.countweightLabel = Label(self.root, text='weight = ' + str(self.weight) + "   " + 'count = ' + str(self.count)).pack()
 		
 		# Buttons
@@ -278,13 +293,6 @@ class RatingWindow:
 		self.DB.update_edge(rating)
 		self.root.destroy()
 		self.mainwindow.GeneratePairButtonPressed()
-
-class PathSettings:
-	def __init__(self, save_path):
-		self.username=getpass.getuser()
-		self.save_path = save_path
-		cPickle.dump(self, open('path_settings.p', 'wb'))
-		
 		
 def main():
 	
