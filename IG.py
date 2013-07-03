@@ -32,7 +32,8 @@ from pdb import *
 
 # This will contain all the items and methods relevant to the items. 
 class DataBase:
-	def __init__(self):
+	def __init__(self, mainwindow):
+		self.mainwindow = mainwindow
 		self.load_user_settings()
 		try:
 			self.load_graph()
@@ -44,10 +45,12 @@ class DataBase:
 			self.user_settings = cPickle.load(open('user_settings.p', 'rb'))
 			if os.getcwd() in self.user_settings:
 				self.save_path = self.user_settings[os.getcwd()]
-			else:	
+			else:
+				tkMessageBox.showinfo("New User/Computer Detected. Please choose a save directory.")	
 				self.SetPath()
 		except (IOError, cPickle.UnpicklingError):
 			self.user_settings = dict()
+			tkMessageBox.showinfo("New User/Computer Detected", "Please choose a save directory.")
 			self.SetPath()
 
 	def load_graph(self):
@@ -141,13 +144,12 @@ class DataBase:
 		self.save_graph()
 
 	def SetPath(self):
-		self.save_path = tkFileDialog.askdirectory()
+		self.save_path = tkFileDialog.askdirectory(parent = self.mainwindow.root, title = 'Please choose a save directory')
 		self.user_settings[os.getcwd()] = self.save_path
 		cPickle.dump(self.user_settings, open('user_settings.p', 'wb'))		
 
 class MainWindow:
 	def __init__(self):
-		self.DB = DataBase()
 		self.MakeUI()
 			
 	def MakeUI(self):
@@ -183,6 +185,8 @@ class MainWindow:
 		self.set_save_path_button = Button(self.root, text="Set Save Path", default="normal", command=self.SetPath, takefocus=1).pack()
 		
 		self.root.lift()
+
+		self.DB = DataBase(self) # Instantiated here at the end because of parent window issues for ask directory widget.
 		self.root.mainloop()	
 			
 	def AddButtonClicked(self):
@@ -191,7 +195,7 @@ class MainWindow:
 		else:			
 			self.DB.append_to_graph(self.entryWidget.get().strip())
 			self.DB.save_graph()
-			tkMessageBox.showinfo("Confirmation", self.entryWidget.get().strip() + " has been added.")
+			tkMessageBox.showinfo("Confirmation", "%s has been added." % self.entryWidget.get().strip())
 			self.entryWidget.delete(0, END)	
 		self.entryWidget.focus_set()
 	
@@ -218,7 +222,7 @@ class MainWindow:
 		set_trace()
 
 	def SetPath(self):
-		self.DB.save_path = tkFileDialog.askdirectory()
+		self.DB.save_path = tkFileDialog.askdirectory(title = 'Please choose a save directory')
 
 class RatingWindow:
 	def __init__(self, mainwindow):
