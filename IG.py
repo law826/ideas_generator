@@ -23,6 +23,7 @@ import sys
 import random as rand
 from Tkinter import *
 import tkMessageBox
+import tkFileDialog 
 import cPickle
 import numpy as np
 import igraph
@@ -31,8 +32,7 @@ from pdb import *
 
 # This will contain all the items and methods relevant to the items. 
 class DataBase:
-	def __init__(self, mainwindow):
-		self.mainwindow = mainwindow
+	def __init__(self):
 		self.load_user_settings()
 		try:
 			self.load_graph()
@@ -43,12 +43,12 @@ class DataBase:
 		try: 
 			self.user_settings = cPickle.load(open('user_settings.p', 'rb'))
 			if os.getcwd() in self.user_settings:
-				self.save_path = self.user_settings[cwd]
+				self.save_path = self.user_settings[os.getcwd()]
 			else:	
-				mainwindow.SetPathButtonPressed()
+				self.SetPath()
 		except (IOError, cPickle.UnpicklingError):
 			self.user_settings = dict()
-			self.mainwindow.SetPathButtonPressed()
+			self.SetPath()
 
 	def load_graph(self):
 		self.g = igraph.Graph.Read_Pickle(os.sep.join([self.save_path, "graph.p"]))
@@ -72,7 +72,6 @@ class DataBase:
 			self.g.add_vertices(1)
 			number_of_vertices = self.g.vcount()
 			self.g.vs[number_of_vertices-1]["name"] = item
-
 
 	def draw_two(self):
 		self.random_with_count_weight_fail_gate()
@@ -141,9 +140,14 @@ class DataBase:
 		self.g.es.select(_within=[self.two_drawn[0].index, self.two_drawn[1].index])[0]["weight_count_normed"] = rating/edge_count # Normalized weight count attribute.
 		self.save_graph()
 
+	def SetPath(self):
+		self.save_path = tkFileDialog.askdirectory()
+		self.user_settings[os.getcwd()] = self.save_path
+		cPickle.dump(self.user_settings, open('user_settings.p', 'wb'))		
+
 class MainWindow:
 	def __init__(self):
-		self.DB = DataBase(self)
+		self.DB = DataBase()
 		self.MakeUI()
 			
 	def MakeUI(self):
@@ -176,7 +180,7 @@ class MainWindow:
 		self.generate_pair_button = Button(self.root, text="Generate Pair", default="normal", command=self.GeneratePairButtonPressed, takefocus=1).pack()		
 		self.display_database_button = Button(self.root, text="Display Database", default="normal", command=self.ManageDatabaseButtonPressed, takefocus=1).pack()
 		self.debug_mode_button = Button(self.root, text="Debug Mode", default="normal", command=self.DebugModeButtonPressed, takefocus=1).pack()
-		self.set_save_path_button = Button(self.root, text="Set Save Path", default="normal", command=self.SetPathButtonPressed, takefocus=1).pack()
+		self.set_save_path_button = Button(self.root, text="Set Save Path", default="normal", command=self.SetPath, takefocus=1).pack()
 		
 		self.root.lift()
 		self.root.mainloop()	
@@ -212,50 +216,9 @@ class MainWindow:
 	def DebugModeButtonPressed(self):
 		#self.DB.g.write_svg("graph.svg", labels = "name", layout = self.DB.g.layout_kamada_kawai())
 		set_trace()
-	
-	def SetPathButtonPressed(self):
-		import tkFileDialog; tkFileDialog.askdirectory()
 
-
-
-
-		self.path_root = Tk()
-		
-		# Create a text frame to hold the text Label and the Entry widget
-		self.path_textFrame = Frame(self.path_root)		
-				
-		# Create a Label in textFrame
-		self.path_entryLabel = Label(self.path_textFrame)
-		self.path_entryLabel["text"] = "Enter the save path:"
-		self.path_entryLabel.pack(side=LEFT)
-
-
-
-		# Ask for directory.
-
-	
-		# Create an Entry Widget in textFrame
-		self.path_entryWidget = Entry(self.path_textFrame)
-		self.path_entryWidget["width"] = 50
-		self.path_entryWidget.pack(side=LEFT)
-		self.path_textFrame.pack()
-		
-		self.path_root.title("Please set the path for save files")
-		
-		self.path_add_button = Button(self.path_root, text="OK", default="active", command=self.SetPath, takefocus=1)
-		self.path_add_button.pack()
-		
-		self.path_root.mainloop()
-	
 	def SetPath(self):
-		
-		if self.path_entryWidget.get().strip() == "":
-			tkMessageBox.showerror("Tkinter Entry Widget", "Enter a save path")
-		else:
-			self.DB.save_path = self.path_entryWidget.get().strip()
-			self.DB.user_settings[os.getcwd()] = self.path_entryWidget.get().strip()
-		self.g.write_pickle(os.sep.join([self.DB.user_settings, "user_settings.p"]))
-		self.path_root.destroy()
+		self.DB.save_path = tkFileDialog.askdirectory()
 
 class RatingWindow:
 	def __init__(self, mainwindow):
