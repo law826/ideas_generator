@@ -243,17 +243,24 @@ class RatingWindow:
 		self.countweightLabel = Label(self.root, text='weight = ' + str(self.weight) + "   " + 'count = ' + str(self.count)).pack()
 		
 		# Buttons
-		button1 = Button(self.root, text="1", default="active", command = lambda: self.RatingButtonPressed(1), takefocus=1).pack()
-		button2 = Button(self.root, text="2", default="active", command = lambda: self.RatingButtonPressed(2), takefocus=1).pack()
-		button3 = Button(self.root, text="3", default="active", command = lambda: self.RatingButtonPressed(3), takefocus=1).pack()
-		button4 = Button(self.root, text="4", default="active", command = lambda: self.RatingButtonPressed(4), takefocus=1).pack()
-		button5 = Button(self.root, text="5", default="active", command = lambda: self.RatingButtonPressed(5), takefocus=1).pack()
-		
+		buttons = [1, 2, 3, 4, 5]
+		for button in buttons:
+			button = Button(self.root, text=str(button), default="active", command = lambda: self.RatingButtonClicked(button)).pack()
+
+		# Binding of buttons (including in above seems to throw an error)
+		for button in buttons:
+			self.root.bind("<KeyPress-%s>" % button, self.RatingButtonPressed)	
+
 		self.root.lift()
-		self.root.mainloop()	
-		
-	def RatingButtonPressed(self, rating):
+		self.root.mainloop()
+
+	def RatingButtonClicked(self, rating):
 		self.DB.update_edge(rating)
+		self.root.destroy()
+		self.mainwindow.GeneratePairButtonPressed()		
+		
+	def RatingButtonPressed(self, event):
+		self.DB.update_edge(float(event.char))
 		self.root.destroy()
 		self.mainwindow.GeneratePairButtonPressed()
 		
