@@ -260,7 +260,7 @@ class RatingWindow:
 
 		# Binding of buttons (including in above seems to throw an error)
 		for button in buttons:
-			self.root.bind("<KeyPress-%s>" % button, self.RatingButtonPressed)	
+			self.root.bind("<KeyRelease-%s>" % button, self.RatingButtonPressed)	
 
 		self.root.lift()
 		self.root.mainloop()
