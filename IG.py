@@ -13,7 +13,6 @@ To do list:
 [] set path for save files within gui
 [] term management
 [] make buttons tabable
-[] bind return key to add a concept
 [] delete item from list
 [] set default behavior of text boxes and buttons
 [] make window the default focus
@@ -175,7 +174,7 @@ class MainWindow:
 		self.textFrame.pack()
 		
 		# Buttons
-		self.add_button = Button(self.root, text="Add Concept", default="normal", command=self.AddButtonClicked, takefocus=1)
+		self.add_button = Button(self.root, text="Add Concept", default="normal", command=self.AddButtonPressed, takefocus=1)
 		self.add_button.bind("<Return>", self.AddButtonPressed)
 		self.add_button.pack()
 
@@ -189,7 +188,7 @@ class MainWindow:
 		self.DB = DataBase(self) # Instantiated here at the end because of parent window issues for ask directory widget.
 		self.root.mainloop()	
 			
-	def AddButtonClicked(self):
+	def AddButtonPressed(self, event=0):
 		if self.entryWidget.get().strip() == "":
 			tkMessageBox.showerror("Tkinter Entry Widget", "Enter a text value")
 		else:			
@@ -198,9 +197,6 @@ class MainWindow:
 			tkMessageBox.showinfo("Confirmation", "%s has been added." % self.entryWidget.get().strip())
 			self.entryWidget.delete(0, END)	
 		self.entryWidget.focus_set()
-	
-	def AddButtonPressed(self, event):
-		self.AddButtonClicked()
 		
 	def GeneratePairButtonPressed(self):
 		RatingWindow(self)
