@@ -77,7 +77,7 @@ class DataBase:
 
 	def draw_two(self):
 		self.random_with_count_weight_fail_gate()
-		return self.two_drawn[0]["name"], self.two_drawn[1]["name"], self.count_of_selected_edge, self.weight_of_selected_edge
+		return self.two_drawn[0]["name"], self.two_drawn[1]["name"], self.count_of_selected_edge, self.weight_of_selected_edge, self.total_fail_probability
 
 
 		# Unconnected first.	
@@ -105,17 +105,14 @@ class DataBase:
 				self.count_of_selected_edge = 0
 				self.weight_of_selected_edge = 3
 				
-			self.count_fail_probability = 0.90-(0.90/(self.count_of_selected_edge+1))
-			
-			if self.weight_of_selected_edge >= 0:
-				self.weight_fail_probability = -(0.18*self.weight_of_selected_edge) + 0.90
-			else:
-				self.weight_fail_probability = 0.90
+
+			#self.count_fail_probability = 0.90-(0.90/(self.count_of_selected_edge+1))
+			self.weight_fail_probability = -(0.18*(self.weight_of_selected_edge-1)) + 0.90
 							
-			total_fail_probability = (self.count_fail_probability + self.weight_fail_probability)/2
+			self.total_fail_probability = self.weight_fail_probability
 			
 			draw_number = rand.random()
-			if draw_number >= total_fail_probability:
+			if draw_number >= self.total_fail_probability:
 				pass_fail_gate = 1
 			else:
 				pass
@@ -239,29 +236,30 @@ class RatingWindow:
 		self.MakeUI()
 		
 	def GeneratePair(self):
-		self.Item1, self.Item2, self.count, self.weight = self.DB.draw_two()
+		self.Item1, self.Item2, self.count, self.weight, self.total_fail_probability = self.DB.draw_two()
 		
 	def MakeUI(self):
 		
 		self.root = Tk()
 		self.root.title("Please give a rating")
-     		
-		# Create a text frame to hold the text Label and the Entry widget
-		self.textFrame = Frame(self.root)	
-						
+     						
 		# Create a Label in textFrame
-		self.pairLabel = Label(self.root, text="%s    %s" % (self.Item1, self.Item2)).pack()
-		self.countweightLabel = Label(self.root, text='weight = ' + str(self.weight) + "   " + 'count = ' + str(self.count)).pack()
+		self.pairLabel = Label(self.root, text="%s    %s" % (self.Item1, self.Item2), font=("Helvetica", 24, "bold")).pack()
+		self.countweightLabel = Label(self.root, text='weight = %s count = %s\r fail probability = %s' %(str(self.weight), str(self.count), str(self.total_fail_probability))).pack()
 		
+		# Create a button frame to hold the buttons horizontally.
+		self.buttonFrame = Frame(self.root)
+		self.buttonFrame.pack()
+
+
 		# Buttons
 		buttons = [1, 2, 3, 4, 5]
 		for button in buttons:
-			b = Button(self.root, text=str(button), default="active", command = lambda: self.RatingButtonClicked(button)).pack()
+			b = Button(self.buttonFrame, text=str(button), command = lambda: self.RatingButtonClicked(button)).pack(side = LEFT)
 
 		# Binding of buttons (including in above seems to throw an error)
 		for button in buttons:
 			self.root.bind("<KeyRelease-%s>" % button, self.RatingButtonPressed)	
-
 		self.root.lift()
 		self.root.mainloop()
 
