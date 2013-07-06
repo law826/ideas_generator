@@ -211,14 +211,6 @@ class MainWindow:
 					
 	def ManageDatabaseButtonPressed(self):
 		ManageDatabaseWindow(self.DB)
-
-
-		# for member_count, member in enumerate(self.DB.g.vs["name"]):
-		# 	if member_count==0:
-		# 		self.database_string = self.DB.g.vs[member_count]["name"]
-		# 	else:
-		# 		self.database_string = self.database_string+"\r"+self.DB.g.vs[member_count]["name"]
-		# tkMessageBox.showinfo("Display List", self.database_string)
 	
 	def DebugModeButtonPressed(self):
 		#self.DB.g.write_svg("graph.svg", labels = "name", layout = self.DB.g.layout_kamada_kawai())
@@ -260,8 +252,6 @@ class ManageDatabaseWindow:
 			tkMessageBox.showinfo("Term deleted", "%s has been deleted." %selected_concept)
 		else:
 			pass
-
-		
 
 class RatingWindow:
 	def __init__(self, mainwindow):
