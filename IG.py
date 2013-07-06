@@ -175,7 +175,7 @@ class MainWindow:
 		button_labels = [
 			'Add Concept', 
 			'Generate Pair', 
-			'Manage Database', 
+			'Database Manager', 
 			'Debug Mode', 
 			'Set Save Path', 
 			]
@@ -210,16 +210,15 @@ class MainWindow:
 		RatingWindow(self)
 					
 	def ManageDatabaseButtonPressed(self):
-		for member_count, member in enumerate(self.DB.g.vs["name"]):
-			if member_count==0:
-				self.database_string = self.DB.g.vs[member_count]["name"]
-			else:
-				self.database_string = self.database_string+"\r"+self.DB.g.vs[member_count]["name"]
-		tkMessageBox.showinfo("Display List", self.database_string)
-		
-		# To make the list more functional:
-		# listbox = Listbox(master)
-		# listbox.pack()
+		ManageDatabaseWindow(self.DB)
+
+
+		# for member_count, member in enumerate(self.DB.g.vs["name"]):
+		# 	if member_count==0:
+		# 		self.database_string = self.DB.g.vs[member_count]["name"]
+		# 	else:
+		# 		self.database_string = self.database_string+"\r"+self.DB.g.vs[member_count]["name"]
+		# tkMessageBox.showinfo("Display List", self.database_string)
 	
 	def DebugModeButtonPressed(self):
 		#self.DB.g.write_svg("graph.svg", labels = "name", layout = self.DB.g.layout_kamada_kawai())
@@ -227,6 +226,42 @@ class MainWindow:
 
 	def SetPath(self):
 		self.DB.save_path = tkFileDialog.askdirectory(title = 'Please choose a save directory')
+
+
+class ManageDatabaseWindow:
+	def __init__(self, database):
+		self.DB = database
+		self.root = Tk()
+		self.root.title("Database Manager")
+		self.MakeListBox()
+		mainloop()
+
+	def MakeListBox(self):	
+		self.listbox = Listbox(self.root)
+		self.listbox.pack()
+		self.b = Button(self.root, text = "Delete", command = self.DeleteItem)
+		self.b.pack()
+		for concept in self.DB.g.vs["name"]:
+			self.listbox.insert(END, concept)
+
+
+	def DeleteItem(self):
+		selected_index = self.listbox.curselection()
+		selected_concept = self.listbox.get(selected_index)
+
+		result = tkMessageBox.askquestion("Delete", "Are you sure you want to delete %s?" %selected_concept, icon='warning')
+		if result == 'yes':
+			vertex_index = self.DB.g.vs.find(name=selected_concept).index
+			self.DB.g.delete_vertices(vertex_index)
+			self.listbox.pack_forget()
+			self.b.pack_forget()
+			self.MakeListBox()
+			self.DB.save_graph()
+			tkMessageBox.showinfo("Term deleted", "%s has been deleted." %selected_concept)
+		else:
+			pass
+
+		
 
 class RatingWindow:
 	def __init__(self, mainwindow):
