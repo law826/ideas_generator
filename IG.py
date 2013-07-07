@@ -200,7 +200,7 @@ class MainWindow:
 			]
 
 		for button_number, label in enumerate(button_labels):
-			b = Button(self.root, text=label, default="normal", command=button_commands[button_number], takefocus=1).pack()
+			b = Button(self.root, text=label, default="normal", command=button_commands[button_number]).pack()
 		
 		self.root.lift()
 
@@ -298,12 +298,23 @@ class RatingWindow:
 			self.buttonFrame.bind("<KeyRelease-%s>" % button, self.RatingButtonPressed)	
 
 		# Add comments to the edge.
-		self.comments_box = Text(self.root, width=40, height = 10, borderwidth = 1)
+		self.comments_box = Text(self.root, width=40, height = 10, takefocus=1, wrap = WORD)
+
 		self.comments = self.DB.retrieve_comment()
-		self.comments_box.insert('1.0', self.comments)
+
+		self.comments_box.bind("<Button-1>", self.ClearDefaultComments)
+
+		try: 
+			self.comments_box.insert('1.0', self.comments)
+		except TclError:
+			pass
 		self.comments_box.pack()
 
+		self.root.bind("<KeyRelease-c>", self.ClearDefaultComments)
+		self.root.bind("<Escape>", self.RatingsFocusSet)
+
 		# Last elements of UI.
+
 		self.root.lift()
 		self.buttonFrame.focus_set()		
 		self.root.mainloop()
@@ -312,6 +323,14 @@ class RatingWindow:
 	def SaveComments(self):
 		self.comments = self.comments_box.get('1.0', 'end') 
 		self.DB.update_comment(self.comments)
+
+	def RatingsFocusSet(self, event):
+		self.buttonFrame.focus_set()
+
+	def ClearDefaultComments(self, event):
+		if self.comments_box.get('1.0', 'end')  == u'Insert comments here\n':
+			self.comments_box.delete(1.0, END)
+		self.comments_box.focus_set()
 
 	def RatingButtonClicked(self, rating):
 		self.DB.update_edge(rating)
