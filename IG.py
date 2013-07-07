@@ -249,7 +249,7 @@ class MainWindow:
 		RatingWindow(self)
 					
 	def ManageDatabaseButtonPressed(self):
-		ManageDatabaseWindow(self.DB)
+		ManageDatabaseWindow(self.DB, self)
 	
 	def DebugModeButtonPressed(self):
 		#self.DB.g.write_svg("graph.svg", labels = "name", layout = self.DB.g.layout_kamada_kawai())
@@ -273,8 +273,9 @@ class MainWindow:
 
 
 class ManageDatabaseWindow:
-	def __init__(self, database):
+	def __init__(self, database, mainwindow):
 		self.DB = database
+		self.mainwindow = mainwindow
 		self.root = Tk()
 		self.root.title("Database Manager")
 		self.MakeListBox()
@@ -302,6 +303,7 @@ class ManageDatabaseWindow:
 			self.MakeListBox()
 			self.DB.save_graph()
 			tkMessageBox.showinfo("Term deleted", "%s has been deleted." %selected_concept)
+			self.mainwindow.SetGraphStatistics()
 		else:
 			pass
 
