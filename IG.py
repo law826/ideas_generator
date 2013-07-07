@@ -17,6 +17,7 @@ To do list:
 [] set default behavior of text boxes and buttons
 [] make window the default focus
 """
+from __future__ import division
 import os
 import sys
 import random as rand
@@ -28,6 +29,7 @@ import numpy as np
 import igraph
 import getpass
 from pdb import *
+
 
 # This will contain all the items and methods relevant to the items. 
 class DataBase:
@@ -164,8 +166,19 @@ class MainWindow:
 		self.root = Tk()
 		self.root.title("Ideas Generator")
 		self.root["padx"] = 40
-		self.root["pady"] = 20       
-			
+		self.root["pady"] = 20  
+
+		self.LabelEntryUI()
+		self.ButtonsUI()
+
+		self.DB = DataBase(self) # Instantiated here at the end because of parent window issues for ask directory widget.
+
+		self.GraphStatisticsUI()
+
+		self.root.lift()
+		self.root.mainloop()
+
+	def LabelEntryUI(self):
 		# Create a text frame to hold the text Label and the Entry widget
 		self.textFrame = Frame(self.root)		
 				
@@ -181,8 +194,8 @@ class MainWindow:
 		self.entryWidget.focus_set()
 		self.entryWidget.bind("<Return>", self.AddButtonPressed)
 		self.textFrame.pack()
-		
-		# Buttons
+
+	def ButtonsUI(self):
 		button_labels = [
 			'Add Concept', 
 			'Generate Pair', 
@@ -201,11 +214,25 @@ class MainWindow:
 
 		for button_number, label in enumerate(button_labels):
 			b = Button(self.root, text=label, default="normal", command=button_commands[button_number]).pack()
-		
-		self.root.lift()
 
-		self.DB = DataBase(self) # Instantiated here at the end because of parent window issues for ask directory widget.
-		self.root.mainloop()	
+	def GraphStatisticsUI(self):
+		self.SetGraphStatistics()
+		self.nodeFrame = Frame(self.root)
+		self.edgeFrame = Frame(self.root)
+		self.percentageFrame = Frame(self.root)
+
+		self.node_count_label = Label(self.nodeFrame, text="Nodes = ").pack(side = LEFT)
+		self.node_count_label_number = Label(self.nodeFrame, textvariable=self.node_count).pack(side = LEFT)
+		self.edge_count_label = Label(self.edgeFrame, text="Edges = ").pack(side = LEFT)
+		self.edge_count_label_number = Label(self.edgeFrame, textvariable=self.edge_count).pack(side = LEFT)
+		self.percentage_count_label = Label(self.percentageFrame, text="Percentage of explored edges = ").pack(side = LEFT)
+		self.percentage_count_label_number = Label(self.percentageFrame, textvariable=self.percentage).pack(side = LEFT)
+
+
+
+		self.nodeFrame.pack()
+		self.edgeFrame.pack()
+		self.percentageFrame.pack()
 			
 	def AddButtonPressed(self, event=0):
 		if self.entryWidget.get().strip() == "":
@@ -215,6 +242,7 @@ class MainWindow:
 			self.DB.save_graph()
 			tkMessageBox.showinfo("Confirmation", "%s has been added." % self.entryWidget.get().strip())
 			self.entryWidget.delete(0, END)	
+		self.SetGraphStatistics()
 		self.entryWidget.focus_set()
 		
 	def GeneratePairButtonPressed(self):
@@ -226,6 +254,19 @@ class MainWindow:
 	def DebugModeButtonPressed(self):
 		#self.DB.g.write_svg("graph.svg", labels = "name", layout = self.DB.g.layout_kamada_kawai())
 		set_trace()
+
+	def SetGraphStatistics(self):
+		try: 
+			self.node_count
+		except AttributeError:
+			self.node_count = StringVar()
+			self.edge_count = StringVar()
+			self.percentage = StringVar()
+		self.node_count.set(len(self.DB.g.vs))
+		self.edge_count.set(len(self.DB.g.es))
+
+		self.percentage_of_edges = len(self.DB.g.es)/sum(range(len(self.DB.g.vs)))
+		self.percentage.set(str('%.2f') % self.percentage_of_edges)
 
 	def SetPath(self):
 		self.DB.save_path = tkFileDialog.askdirectory(title = 'Please choose a save directory')
@@ -314,11 +355,9 @@ class RatingWindow:
 		self.root.bind("<Escape>", self.RatingsFocusSet)
 
 		# Last elements of UI.
-
 		self.root.lift()
 		self.buttonFrame.focus_set()		
 		self.root.mainloop()
-
 
 	def SaveComments(self):
 		self.comments = self.comments_box.get('1.0', 'end') 
@@ -335,8 +374,9 @@ class RatingWindow:
 	def RatingButtonClicked(self, rating):
 		self.DB.update_edge(rating)
 		self.SaveComments()
+		self.mainwindow.SetGraphStatistics()
 		self.root.destroy()
-		self.mainwindow.GeneratePairButtonPressed()	
+		self.mainwindow.GeneratePairButtonPressed()
 	
 	def RatingButtonPressed(self, event):
 		rating = float(event.char)
