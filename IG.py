@@ -139,6 +139,17 @@ class DataBase:
 		self.g.es.select(_within=[self.two_drawn[0].index, self.two_drawn[1].index])[0]["weight_count_normed"] = rating/edge_count # Normalized weight count attribute.
 		self.save_graph()
 
+	def update_comment(self, comment):
+		self.g.es.select(_within=[self.two_drawn[0].index, self.two_drawn[1].index])[0]["comment"] = comment
+
+	def retrieve_comment(self):
+		try:
+			self.comment = self.g.es.select(_within=[self.two_drawn[0].index, self.two_drawn[1].index])[0]["comment"]
+		except (IndexError, KeyError, TypeError):
+			self.comment = "Insert comments here"
+
+		return self.comment
+
 	def SetPath(self):
 		self.save_path = tkFileDialog.askdirectory(parent = self.mainwindow.root, title = 'Please choose a save directory')
 		self.user_settings[os.getcwd()] = self.save_path
@@ -265,6 +276,7 @@ class RatingWindow:
 		
 	def MakeUI(self):
 		
+		# Initializing UI.
 		self.root = Tk()
 		self.root.title("Please give a rating")
      						
@@ -276,7 +288,6 @@ class RatingWindow:
 		self.buttonFrame = Frame(self.root)
 		self.buttonFrame.pack()
 
-
 		# Buttons
 		buttons = [1, 2, 3, 4, 5]
 		for button in buttons:
@@ -284,19 +295,35 @@ class RatingWindow:
 
 		# Binding of buttons (including in above seems to throw an error)
 		for button in buttons:
-			self.root.bind("<KeyRelease-%s>" % button, self.RatingButtonPressed)	
+			self.buttonFrame.bind("<KeyRelease-%s>" % button, self.RatingButtonPressed)	
+
+		# Add comments to the edge.
+		self.comments_box = Text(self.root, width=40, height = 10, borderwidth = 1)
+		self.comments = self.DB.retrieve_comment()
+		self.comments_box.insert('1.0', self.comments)
+		self.comments_box.pack()
+
+		# Last elements of UI.
 		self.root.lift()
+		self.buttonFrame.focus_set()		
 		self.root.mainloop()
+
+
+	def SaveComments(self):
+		self.comments = self.comments_box.get('1.0', 'end') 
+		self.DB.update_comment(self.comments)
 
 	def RatingButtonClicked(self, rating):
 		self.DB.update_edge(rating)
+		self.SaveComments()
 		self.root.destroy()
-		self.mainwindow.GeneratePairButtonPressed()		
-		
+		self.mainwindow.GeneratePairButtonPressed()	
+	
 	def RatingButtonPressed(self, event):
-		self.DB.update_edge(float(event.char))
-		self.root.destroy()
-		self.mainwindow.GeneratePairButtonPressed()
+		rating = float(event.char)
+		self.RatingButtonClicked(rating)
+
+
 		
 def main():
 	
