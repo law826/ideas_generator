@@ -78,6 +78,11 @@ class DataBase:
 			self.g.vs[number_of_vertices-1]["name"] = item
 
 	def draw_two(self):
+		"""	
+		[] 1 weight and 1 count are occuring too frequently.
+		[] increase frequency of highly rated items with real comments
+		[] decrease vertices that don't seem to connect to many other nodes
+		"""
 		self.random_with_count_weight_fail_gate()
 		return self.two_drawn[0]["name"], self.two_drawn[1]["name"], self.count_of_selected_edge, self.weight_of_selected_edge, self.total_fail_probability
 
@@ -94,6 +99,9 @@ class DataBase:
 		#self.vertex_sequence_of_unconnected = self.g.vs.select(_degree_eq=0)
 
 	def random_with_count_weight_fail_gate(self):
+		"""
+		Currently chooses two items at random and sets the fail rate in inverse proportion to weight. 
+		"""
 
 		pass_fail_gate = 0
 		while pass_fail_gate==0:
@@ -120,7 +128,9 @@ class DataBase:
 				pass
 
 	def betweenness_max_vertex_search(self):
-
+		"""
+		Returns the vertex with the highest betweenness centrality based upon "weight_count_normed."
+		"""
 		non_zero_normed_edgeseq = self.g.es.select(weight_count_normed_gt=1)
 		non_zero_edge_index_list = [edge.index for edge in non_zero_normed_edgeseq]
 		non_zero_graph = self.g.subgraph_edges(non_zero_edge_index_list)
@@ -128,6 +138,7 @@ class DataBase:
 		max_betweenness = max(betweenness)
 		max_betweenness_vertex_list_pos = [i for i, j in enumerate(betweenness) if j == max_betweenness][0]
 		max_vertex = non_zero_graph.vs[max_betweenness_vertex_list_pos]
+		set_trace()
 		return max_vertex
 
 	def update_edge(self, rating):
