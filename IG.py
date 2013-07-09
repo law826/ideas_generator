@@ -29,6 +29,7 @@ import numpy as np
 import igraph
 import getpass
 from pdb import *
+import traceback, code
 
 
 # This will contain all the items and methods relevant to the items. 
@@ -83,9 +84,19 @@ class DataBase:
 		[] increase frequency of highly rated items with real comments
 		[] decrease vertices that don't seem to connect to many other nodes
 		"""
-		self.random_with_count_weight_fail_gate()
-		return self.two_drawn[0]["name"], self.two_drawn[1]["name"], self.count_of_selected_edge, self.weight_of_selected_edge, self.total_fail_probability
 
+		algorithm_chooser = rand.random()
+
+		if algorithm_chooser >= 0.5:
+			max_vertex                = self.betweenness_max_vertex_search()
+			random_unconnected_vertex = self.draw_random_unconnected()
+			self.two_drawn            = [max_vertex, random_unconnected_vertex]
+
+			return self.two_drawn[0]["name"], self.two_drawn[1]["name"], "NA", "NA", "NA"
+
+		elif algorithm_chooser < 0.5:
+			self.random_with_count_weight_fail_gate()
+			return self.two_drawn[0]["name"], self.two_drawn[1]["name"], self.count_of_selected_edge, self.weight_of_selected_edge, self.total_fail_probability
 
 		# Unconnected first.	
 # 		try: 
@@ -127,18 +138,30 @@ class DataBase:
 			else:
 				pass
 
-	def betweenness_max_vertex_search(self):
+	def draw_random_unconnected(self):
+		"""
+		Chooses a random vertex with an indegree of 0. If none, choose a random vertex.
+		"""
+
+		unconnected_vertseq = self.g.vs.select(_degree_eq=0)
+		try:
+			random_unconnected_vertex = rand.sample(unconnected_vertseq ,1)[0]
+		except ValueError:
+			random_unconnected_vertex = rand.sample(self.g.vs,1)[0]
+
+		return random_unconnected_vertex
+
+	def betweenness_max_vertex_search(self, weight='weight_count_normed'):
 		"""
 		Returns the vertex with the highest betweenness centrality based upon "weight_count_normed."
 		"""
-		non_zero_normed_edgeseq = self.g.es.select(weight_count_normed_gt=1)
+		non_zero_normed_edgeseq = self.g.es.select(weight_gt=1) # All the edges with a betweenness greater than 1.
 		non_zero_edge_index_list = [edge.index for edge in non_zero_normed_edgeseq]
 		non_zero_graph = self.g.subgraph_edges(non_zero_edge_index_list)
-		betweenness = non_zero_graph.betweenness(weights='weight_count_normed')
+		betweenness = non_zero_graph.betweenness(weights=weight)
 		max_betweenness = max(betweenness)
 		max_betweenness_vertex_list_pos = [i for i, j in enumerate(betweenness) if j == max_betweenness][0]
 		max_vertex = non_zero_graph.vs[max_betweenness_vertex_list_pos]
-		set_trace()
 		return max_vertex
 
 	def update_edge(self, rating):
@@ -402,7 +425,5 @@ def main():
 	mainwindow = MainWindow()
 
 if __name__ == '__main__':
-    main()
-		
-
+	main()
 		
