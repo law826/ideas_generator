@@ -305,7 +305,6 @@ class MainWindow:
 	def SetPath(self):
 		self.DB.save_path = tkFileDialog.askdirectory(title = 'Please choose a save directory')
 
-
 class ManageDatabaseWindow:
 	def __init__(self, database, mainwindow):
 		self.DB = database
