@@ -18,18 +18,13 @@ To do list:
 [] make window the default focus
 """
 from __future__ import division
-import os
-import sys
-import random as rand
+import os, sys, tkMessageBox, tkFileDialog, cPickle, numpy as np, getpass, random as rand
 from Tkinter import *
-import tkMessageBox
-import tkFileDialog 
-import cPickle
-import numpy as np
-import igraph
-import getpass
 from pdb import *
-import traceback, code
+try:
+	import igraph
+except ImportError:
+	raise ImportError, "The igraph module is required to run this program."
 
 
 # This will contain all the items and methods relevant to the items. 
@@ -283,7 +278,7 @@ class MainWindow:
 		RatingWindow(self)
 					
 	def ManageDatabaseButtonPressed(self):
-		ManageDatabaseWindow(self.DB, self)
+		ManageDatabaseWindow(self)
 	
 	def DebugModeButtonPressed(self):
 		#self.DB.g.write_svg("graph.svg", labels = "name", layout = self.DB.g.layout_kamada_kawai())
@@ -306,8 +301,9 @@ class MainWindow:
 		self.DB.save_path = tkFileDialog.askdirectory(title = 'Please choose a save directory')
 
 class ManageDatabaseWindow:
-	def __init__(self, database, mainwindow):
-		self.DB = database
+	def __init__(self, mainwindow):
+
+		self.DB = mainwindow.DB
 		self.mainwindow = mainwindow
 		self.root = Tk()
 		self.root.title("Database Manager")
