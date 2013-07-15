@@ -249,16 +249,12 @@ class MainWindow:
 		self.nodeFrame = Frame(self.root)
 		self.edgeFrame = Frame(self.root)
 		self.percentageFrame = Frame(self.root)
-
 		self.node_count_label = Label(self.nodeFrame, text="Nodes = ").pack(side = LEFT)
 		self.node_count_label_number = Label(self.nodeFrame, textvariable=self.node_count).pack(side = LEFT)
 		self.edge_count_label = Label(self.edgeFrame, text="Edges = ").pack(side = LEFT)
 		self.edge_count_label_number = Label(self.edgeFrame, textvariable=self.edge_count).pack(side = LEFT)
 		self.percentage_count_label = Label(self.percentageFrame, text="Percentage of explored edges = ").pack(side = LEFT)
 		self.percentage_count_label_number = Label(self.percentageFrame, textvariable=self.percentage).pack(side = LEFT)
-
-
-
 		self.nodeFrame.pack()
 		self.edgeFrame.pack()
 		self.percentageFrame.pack()
