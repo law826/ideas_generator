@@ -307,7 +307,7 @@ class ManageDatabaseWindow:
 		mainloop()
 
 	def MakeListBox(self):	
-		self.listbox = Listbox(self.root)
+		self.listbox = Listbox(self.root, width=80)
 		self.listbox.pack()
 		self.b = Button(self.root, text = "Delete", command = self.DeleteItem)
 		self.b.pack()
