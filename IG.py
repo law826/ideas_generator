@@ -7,6 +7,7 @@ Created by VL and LN on 2012-08-15.
 Copyright (c) 2012 __MyCompanyName__. All rights reserved.
 
 To do list:
+[] make sure score are being added in the correct way
 [] build a way to focus on a particular term (for problem solving)
 [] support for multiple users
 [] implement smart correlations
