@@ -277,7 +277,7 @@ class MainWindow:
 		ManageDatabaseWindow(self)
 	
 	def DebugModeButtonPressed(self):
-		#self.DB.g.write_svg("graph.svg", labels = "name", layout = self.DB.g.layout_kamada_kawai())
+		#..write_svg("graph.svg", labels = "name", layout = self.DB.g.layout_kamada_kawai())
 		set_trace()
 
 	def SetGraphStatistics(self):
