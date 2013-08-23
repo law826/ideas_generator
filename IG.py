@@ -17,6 +17,7 @@ To do list:
 [] set default behavior of text boxes and buttons
 [] make window the default focus
 """
+from __future__ import division
 import os
 import sys
 import random as rand
@@ -28,6 +29,7 @@ import numpy as np
 import igraph
 import getpass
 from pdb import *
+
 
 # This will contain all the items and methods relevant to the items. 
 class DataBase:
@@ -77,6 +79,11 @@ class DataBase:
 		self.save_graph()
 
 	def draw_two(self):
+		"""	
+		[] 1 weight and 1 count are occuring too frequently.
+		[] increase frequency of highly rated items with real comments
+		[] decrease vertices that don't seem to connect to many other nodes
+		"""
 		self.random_with_count_weight_fail_gate()
 		return self.two_drawn[0]["name"], self.two_drawn[1]["name"], self.count_of_selected_edge, self.weight_of_selected_edge, self.total_fail_probability
 
@@ -93,6 +100,9 @@ class DataBase:
 		#self.vertex_sequence_of_unconnected = self.g.vs.select(_degree_eq=0)
 
 	def random_with_count_weight_fail_gate(self):
+		"""
+		Currently chooses two items at random and sets the fail rate in inverse proportion to weight. 
+		"""
 
 		pass_fail_gate = 0
 		while pass_fail_gate==0:
@@ -119,7 +129,9 @@ class DataBase:
 				pass
 
 	def betweenness_max_vertex_search(self):
-
+		"""
+		Returns the vertex with the highest betweenness centrality based upon "weight_count_normed."
+		"""
 		non_zero_normed_edgeseq = self.g.es.select(weight_count_normed_gt=1)
 		non_zero_edge_index_list = [edge.index for edge in non_zero_normed_edgeseq]
 		non_zero_graph = self.g.subgraph_edges(non_zero_edge_index_list)
@@ -127,6 +139,7 @@ class DataBase:
 		max_betweenness = max(betweenness)
 		max_betweenness_vertex_list_pos = [i for i, j in enumerate(betweenness) if j == max_betweenness][0]
 		max_vertex = non_zero_graph.vs[max_betweenness_vertex_list_pos]
+		set_trace()
 		return max_vertex
 
 	def update_edge(self, rating):
@@ -181,6 +194,17 @@ class Item:
 		self.g.es.select(_within=[self.two_drawn[0].index, self.two_drawn[1].index])[0]["weight_count_normed"] = rating/edge_count # Normalized weight count attribute.
 		self.save_graph()
 
+	def update_comment(self, comment):
+		self.g.es.select(_within=[self.two_drawn[0].index, self.two_drawn[1].index])[0]["comment"] = comment
+
+	def retrieve_comment(self):
+		try:
+			self.comment = self.g.es.select(_within=[self.two_drawn[0].index, self.two_drawn[1].index])[0]["comment"]
+		except (IndexError, KeyError, TypeError):
+			self.comment = "Insert comments here"
+
+		return self.comment
+
 	def SetPath(self):
 		self.save_path = tkFileDialog.askdirectory(parent = self.mainwindow.root, title = 'Please choose a save directory')
 		self.user_settings[os.getcwd()] = self.save_path
@@ -196,8 +220,19 @@ class MainWindow:
 		self.root = Tk()
 		self.root.title("Ideas Generator")
 		self.root["padx"] = 40
-		self.root["pady"] = 20       
-			
+		self.root["pady"] = 20  
+
+		self.LabelEntryUI()
+		self.ButtonsUI()
+
+		self.DB = DataBase(self) # Instantiated here at the end because of parent window issues for ask directory widget.
+
+		self.GraphStatisticsUI()
+
+		self.root.lift()
+		self.root.mainloop()
+
+	def LabelEntryUI(self):
 		# Create a text frame to hold the text Label and the Entry widget
 		self.textFrame = Frame(self.root)		
 				
@@ -218,16 +253,21 @@ class MainWindow:
 		self.entryWidget.bind("<Return>", self.AddButtonPressed)
 >>>>>>> 88ab2fc85c582d021ef6958c12e25a0589836352
 		self.textFrame.pack()
+<<<<<<< HEAD
 		
 		# Buttons
 <<<<<<< HEAD
 		self.add_button = Button(self.root, text="Add Concept", default="normal", command=self.AddButtonPressed, takefocus=1)
 		self.add_button.pack()
 =======
+=======
+
+	def ButtonsUI(self):
+>>>>>>> ebef6c070d74be294b54dd7687e4d1ab8f5c37df
 		button_labels = [
 			'Add Concept', 
 			'Generate Pair', 
-			'Manage Database', 
+			'Database Manager', 
 			'Debug Mode', 
 			'Set Save Path', 
 			]
@@ -242,12 +282,26 @@ class MainWindow:
 			]
 
 		for button_number, label in enumerate(button_labels):
-			b = Button(self.root, text=label, default="normal", command=button_commands[button_number], takefocus=1).pack()
-		
-		self.root.lift()
+			b = Button(self.root, text=label, default="normal", command=button_commands[button_number]).pack()
 
-		self.DB = DataBase(self) # Instantiated here at the end because of parent window issues for ask directory widget.
-		self.root.mainloop()	
+	def GraphStatisticsUI(self):
+		self.SetGraphStatistics()
+		self.nodeFrame = Frame(self.root)
+		self.edgeFrame = Frame(self.root)
+		self.percentageFrame = Frame(self.root)
+
+		self.node_count_label = Label(self.nodeFrame, text="Nodes = ").pack(side = LEFT)
+		self.node_count_label_number = Label(self.nodeFrame, textvariable=self.node_count).pack(side = LEFT)
+		self.edge_count_label = Label(self.edgeFrame, text="Edges = ").pack(side = LEFT)
+		self.edge_count_label_number = Label(self.edgeFrame, textvariable=self.edge_count).pack(side = LEFT)
+		self.percentage_count_label = Label(self.percentageFrame, text="Percentage of explored edges = ").pack(side = LEFT)
+		self.percentage_count_label_number = Label(self.percentageFrame, textvariable=self.percentage).pack(side = LEFT)
+
+
+
+		self.nodeFrame.pack()
+		self.edgeFrame.pack()
+		self.percentageFrame.pack()
 			
 	def AddButtonPressed(self, event=0):
 		if self.entryWidget.get().strip() == "":
@@ -261,29 +315,70 @@ class MainWindow:
 			tkMessageBox.showinfo("Confirmation", "%s has been added." % self.entryWidget.get().strip())
 >>>>>>> 88ab2fc85c582d021ef6958c12e25a0589836352
 			self.entryWidget.delete(0, END)	
+		self.SetGraphStatistics()
 		self.entryWidget.focus_set()
 		
 	def GeneratePairButtonPressed(self):
 		RatingWindow(self)
 					
 	def ManageDatabaseButtonPressed(self):
-		for member_count, member in enumerate(self.DB.g.vs["name"]):
-			if member_count==0:
-				self.database_string = self.DB.g.vs[member_count]["name"]
-			else:
-				self.database_string = self.database_string+"\r"+self.DB.g.vs[member_count]["name"]
-		tkMessageBox.showinfo("Display List", self.database_string)
-		
-		# To make the list more functional:
-		# listbox = Listbox(master)
-		# listbox.pack()
+		ManageDatabaseWindow(self.DB, self)
 	
 	def DebugModeButtonPressed(self):
 		#self.DB.g.write_svg("graph.svg", labels = "name", layout = self.DB.g.layout_kamada_kawai())
 		set_trace()
 
+	def SetGraphStatistics(self):
+		try: 
+			self.node_count
+		except AttributeError:
+			self.node_count = StringVar()
+			self.edge_count = StringVar()
+			self.percentage = StringVar()
+		self.node_count.set(len(self.DB.g.vs))
+		self.edge_count.set(len(self.DB.g.es))
+
+		self.percentage_of_edges = len(self.DB.g.es)/sum(range(len(self.DB.g.vs)))
+		self.percentage.set(str('%.2f') % self.percentage_of_edges)
+
 	def SetPath(self):
 		self.DB.save_path = tkFileDialog.askdirectory(title = 'Please choose a save directory')
+
+
+class ManageDatabaseWindow:
+	def __init__(self, database, mainwindow):
+		self.DB = database
+		self.mainwindow = mainwindow
+		self.root = Tk()
+		self.root.title("Database Manager")
+		self.MakeListBox()
+		mainloop()
+
+	def MakeListBox(self):	
+		self.listbox = Listbox(self.root)
+		self.listbox.pack()
+		self.b = Button(self.root, text = "Delete", command = self.DeleteItem)
+		self.b.pack()
+		for concept in self.DB.g.vs["name"]:
+			self.listbox.insert(END, concept)
+
+
+	def DeleteItem(self):
+		selected_index = self.listbox.curselection()
+		selected_concept = self.listbox.get(selected_index)
+
+		result = tkMessageBox.askquestion("Delete", "Are you sure you want to delete %s?" %selected_concept, icon='warning')
+		if result == 'yes':
+			vertex_index = self.DB.g.vs.find(name=selected_concept).index
+			self.DB.g.delete_vertices(vertex_index)
+			self.listbox.pack_forget()
+			self.b.pack_forget()
+			self.MakeListBox()
+			self.DB.save_graph()
+			tkMessageBox.showinfo("Term deleted", "%s has been deleted." %selected_concept)
+			self.mainwindow.SetGraphStatistics()
+		else:
+			pass
 
 class RatingWindow:
 	def __init__(self, mainwindow):
@@ -297,6 +392,7 @@ class RatingWindow:
 		
 	def MakeUI(self):
 		
+		# Initializing UI.
 		self.root = Tk()
 		self.root.title("Please give a rating")
      						
@@ -308,7 +404,6 @@ class RatingWindow:
 		self.buttonFrame = Frame(self.root)
 		self.buttonFrame.pack()
 
-
 		# Buttons
 		buttons = [1, 2, 3, 4, 5]
 		for button in buttons:
@@ -316,19 +411,53 @@ class RatingWindow:
 
 		# Binding of buttons (including in above seems to throw an error)
 		for button in buttons:
-			self.root.bind("<KeyRelease-%s>" % button, self.RatingButtonPressed)	
+			self.buttonFrame.bind("<KeyRelease-%s>" % button, self.RatingButtonPressed)	
+
+		# Add comments to the edge.
+		self.comments_box = Text(self.root, width=40, height = 10, takefocus=1, wrap = WORD)
+
+		self.comments = self.DB.retrieve_comment()
+
+		self.comments_box.bind("<Button-1>", self.ClearDefaultComments)
+
+		try: 
+			self.comments_box.insert('1.0', self.comments)
+		except TclError:
+			pass
+		self.comments_box.pack()
+
+		self.root.bind("<KeyRelease-c>", self.ClearDefaultComments)
+		self.root.bind("<Escape>", self.RatingsFocusSet)
+
+		# Last elements of UI.
 		self.root.lift()
+		self.buttonFrame.focus_set()		
 		self.root.mainloop()
+
+	def SaveComments(self):
+		self.comments = self.comments_box.get('1.0', 'end') 
+		self.DB.update_comment(self.comments)
+
+	def RatingsFocusSet(self, event):
+		self.buttonFrame.focus_set()
+
+	def ClearDefaultComments(self, event):
+		if self.comments_box.get('1.0', 'end')  == u'Insert comments here\n':
+			self.comments_box.delete(1.0, END)
+		self.comments_box.focus_set()
 
 	def RatingButtonClicked(self, rating):
 		self.DB.update_edge(rating)
-		self.root.destroy()
-		self.mainwindow.GeneratePairButtonPressed()		
-		
-	def RatingButtonPressed(self, event):
-		self.DB.update_edge(float(event.char))
+		self.SaveComments()
+		self.mainwindow.SetGraphStatistics()
 		self.root.destroy()
 		self.mainwindow.GeneratePairButtonPressed()
+	
+	def RatingButtonPressed(self, event):
+		rating = float(event.char)
+		self.RatingButtonClicked(rating)
+
+
 		
 def main():
 	

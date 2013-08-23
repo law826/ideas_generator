@@ -3,4 +3,8 @@ S'/Users/law826/github/ideas_generator'
 p2
 S'/Users/law826/Dropbox/Personal/ideas_generator'
 p3
+sS'/Users/ln30/Git/ideas_generator'
+p4
+S'/Users/ln30/Dropbox/Personal/ideas_generator'
+p5
 s.
